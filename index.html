@@ -154,7 +154,7 @@ canvas#moodChart { width: 100% !important; }
 
 <div id="app-screen">
   <div class="top-bar">
-    <span class="app-name">Humörloggen<span class="version-tag">v1.0</span></span>
+    <span class="app-name">Humörloggen<span class="version-tag">v0.1</span></span>
     <div style="display:flex;gap:0.5rem">
       <div class="settings-btn" onclick="openSettings()">⚙️</div>
     </div>
@@ -577,8 +577,8 @@ closeSettings(); loadApp();
 
 // ── SETUP ──
 function setupApp() {
-const name = document.getElementById(‘input-name’).value.trim() || ‘du’;
-localStorage.setItem(‘hl_name’, name);
+const name = document.getElementById(‘input-name’).value.trim() || ‘Daniel’;
+try { localStorage.setItem(‘hl_name’, name); } catch(e) {}
 document.getElementById(‘setup-screen’).style.display = ‘none’;
 loadApp();
 }
@@ -597,8 +597,10 @@ updateStreak();
 
 // ── INIT ──
 window.addEventListener(‘load’, () => {
-if (localStorage.getItem(‘hl_name’)) loadApp();
-else document.getElementById(‘setup-screen’).style.display = ‘flex’;
+try {
+if (localStorage.getItem(‘hl_name’)) { loadApp(); return; }
+} catch(e) {}
+document.getElementById(‘setup-screen’).style.display = ‘flex’;
 });
 </script>
 
