@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Humörloggen</title>
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1C1814">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Humörloggen">
 <meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -17,8 +18,7 @@
   --bg: #F9F6F2; --surface: #FFFFFF; --text: #1C1814;
   --muted: #8A8178; --border: #EAE5DF;
   --shadow: 0 2px 20px rgba(0,0,0,0.06);
-  --accent: #3D6B8A;
-  --accent-light: #E8F0F5;
+  --accent: #3D6B8A; --accent-light: #E8F0F5;
 }
 html, body { height: 100%; overflow-x: hidden; }
 body { font-family: 'Jost', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-weight: 300; -webkit-font-smoothing: antialiased; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
@@ -26,121 +26,133 @@ h1, h2, h3, .serif { font-family: 'Cormorant Garamond', serif; }
 
 /* SETUP */
 #setup-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem; background: linear-gradient(160deg, #F9F6F2 0%, #EAE5DF 100%); }
-.setup-card { background: var(–surface); border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 8px 40px rgba(0,0,0,0.10); }
+.setup-card { background: var(--surface); border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 8px 40px rgba(0,0,0,0.10); }
 .setup-logo { text-align: center; margin-bottom: 2rem; }
 .setup-logo h1 { font-size: 2.4rem; font-weight: 300; letter-spacing: 0.02em; line-height: 1.1; }
-.setup-logo p { color: var(–muted); font-size: 0.85rem; margin-top: 0.4rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.setup-logo p { color: var(--muted); font-size: 0.85rem; margin-top: 0.4rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.setup-logo .version { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; letter-spacing: 0.06em; }
 .form-group { margin-bottom: 1.5rem; }
-.form-group label { display: block; font-size: 0.78rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(–muted); margin-bottom: 0.6rem; }
-.form-group input { width: 100%; padding: 0.85rem 1rem; border: 1.5px solid var(–border); border-radius: 12px; font-family: ‘Jost’, sans-serif; font-size: 1rem; color: var(–text); background: var(–bg); outline: none; transition: border-color 0.2s; }
-.form-group input:focus { border-color: var(–accent); }
-.btn-primary { width: 100%; padding: 1rem; background: var(–accent); color: #fff; border: none; border-radius: 12px; font-family: ‘Jost’, sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 0.5rem; }
+.form-group label { display: block; font-size: 0.78rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+.form-group input { width: 100%; padding: 0.85rem 1rem; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 1rem; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s; }
+.form-group input:focus { border-color: var(--accent); }
+.btn-primary { width: 100%; padding: 1rem; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 0.5rem; }
 .btn-primary:active { transform: scale(0.98); opacity: 0.85; }
 
 /* MAIN */
 #app-screen { display: none; }
 .top-bar { padding: 1rem 1.2rem 0.5rem; display: flex; align-items: center; justify-content: space-between; }
-.app-name { font-family: ‘Cormorant Garamond’, serif; font-size: 1.5rem; font-weight: 300; }
-.version-tag { font-size: 0.62rem; font-family: ‘Jost’, sans-serif; font-weight: 400; color: var(–muted); letter-spacing: 0.08em; vertical-align: middle; margin-left: 4px; }
-.settings-btn { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(–border); background: var(–surface); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; }
-.date-display { font-size: 0.78rem; color: var(–muted); text-align: right; margin: 0 1.2rem 0.8rem; }
+.app-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; }
+.version-tag { font-size: 0.62rem; font-family: 'Jost', sans-serif; font-weight: 400; color: var(--muted); letter-spacing: 0.08em; vertical-align: middle; margin-left: 4px; }
+.icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; }
+.date-display { font-size: 0.78rem; color: var(--muted); text-align: right; margin: 0 1.2rem 0.8rem; }
 
 /* STREAK */
-.streak-bar { margin: 0 1.2rem 1.2rem; background: var(–surface); border-radius: 16px; padding: 1rem 1.2rem; box-shadow: var(–shadow); display: flex; align-items: center; justify-content: space-between; animation: fadeUp 0.4s ease both; }
+.streak-bar { margin: 0 1.2rem 1.2rem; background: var(--surface); border-radius: 16px; padding: 1rem 1.2rem; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; animation: fadeUp 0.4s ease both; }
 .streak-left { display: flex; align-items: center; gap: 0.7rem; }
 .streak-icon { font-size: 1.5rem; }
 .streak-text strong { display: block; font-size: 1rem; font-weight: 500; }
-.streak-text span { font-size: 0.78rem; color: var(–muted); }
+.streak-text span { font-size: 0.78rem; color: var(--muted); }
 .streak-avg { text-align: right; }
 .streak-avg strong { display: block; font-size: 1rem; font-weight: 500; }
-.streak-avg span { font-size: 0.78rem; color: var(–muted); }
+.streak-avg span { font-size: 0.78rem; color: var(--muted); }
 
 /* LOG CARD */
 .section { margin: 0 1.2rem 1.2rem; animation: fadeUp 0.4s 0.1s ease both; }
-.section-title { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(–muted); margin-bottom: 0.8rem; font-weight: 500; }
-.log-card { background: var(–surface); border-radius: 16px; padding: 1.3rem; box-shadow: var(–shadow); }
+.section-title { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; font-weight: 500; }
+.log-card { background: var(--surface); border-radius: 16px; padding: 1.3rem; box-shadow: var(--shadow); }
 .mood-emojis { display: flex; justify-content: space-between; margin-bottom: 1rem; }
-.mood-emoji-btn { font-size: 2rem; background: none; border: none; cursor: pointer; padding: 0.3rem; border-radius: 50%; transition: transform 0.15s; opacity: 0.4; }
+.mood-emoji-btn { font-size: 2rem; background: none; border: none; cursor: pointer; padding: 0.3rem; border-radius: 50%; transition: transform 0.15s; opacity: 0.4; -webkit-tap-highlight-color: transparent; }
 .mood-emoji-btn.selected { opacity: 1; transform: scale(1.2); }
 .mood-time-row { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.8rem; }
-.mood-time-row label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(–muted); white-space: nowrap; }
-.mood-time-input { flex: 1; border: 1.5px solid var(–border); border-radius: 10px; padding: 0.5rem 0.8rem; font-family: ‘Jost’, sans-serif; font-size: 0.85rem; color: var(–text); background: var(–bg); outline: none; }
-.mood-note { width: 100%; border: 1.5px solid var(–border); border-radius: 10px; padding: 0.7rem 0.9rem; font-family: ‘Jost’, sans-serif; font-size: 0.85rem; color: var(–text); background: var(–bg); outline: none; resize: none; min-height: 60px; transition: border-color 0.2s; }
-.mood-note:focus { border-color: var(–accent); }
-.mood-save { margin-top: 0.8rem; width: 100%; padding: 0.8rem; background: var(–accent); color: #fff; border: none; border-radius: 10px; font-family: ‘Jost’, sans-serif; font-size: 0.88rem; font-weight: 500; cursor: pointer; transition: opacity 0.2s; }
+.mood-time-row label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.mood-time-input { flex: 1; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.5rem 0.8rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--text); background: var(--bg); outline: none; }
+.mood-note { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.7rem 0.9rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--text); background: var(--bg); outline: none; resize: none; min-height: 60px; transition: border-color 0.2s; }
+.mood-note:focus { border-color: var(--accent); }
+.mood-save { margin-top: 0.8rem; width: 100%; padding: 0.8rem; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-family: 'Jost', sans-serif; font-size: 0.88rem; font-weight: 500; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .mood-save:active { opacity: 0.8; }
-.mood-saved { text-align: center; font-size: 0.82rem; color: var(–muted); margin-top: 0.5rem; display: none; }
+.mood-saved { text-align: center; font-size: 0.82rem; color: var(--muted); margin-top: 0.5rem; display: none; }
 .today-log { margin-top: 0.8rem; display: flex; flex-direction: column; gap: 0.4rem; }
-.today-item { display: flex; gap: 0.6rem; align-items: center; font-size: 0.78rem; color: var(–muted); background: var(–bg); border-radius: 8px; padding: 0.4rem 0.7rem; }
-.today-time { font-weight: 500; color: var(–text); min-width: 42px; }
+.today-item { display: flex; gap: 0.6rem; align-items: center; font-size: 0.78rem; color: var(--muted); background: var(--bg); border-radius: 8px; padding: 0.4rem 0.7rem; }
+.today-time { font-weight: 500; color: var(--text); min-width: 42px; }
 .today-emoji { font-size: 1rem; }
-.today-note { flex: 1; }
 
 /* ACTION BUTTONS */
 .action-btns { display: flex; gap: 0.8rem; margin: 0 1.2rem 1.2rem; }
-.action-btn { flex: 1; padding: 0.8rem; background: var(–surface); border: 1.5px solid var(–border); border-radius: 12px; font-family: ‘Jost’, sans-serif; font-size: 0.82rem; color: var(–text); cursor: pointer; text-align: center; box-shadow: var(–shadow); }
-.action-btn:active { background: var(–bg); }
+.action-btn { flex: 1; padding: 0.8rem; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.82rem; color: var(--text); cursor: pointer; text-align: center; box-shadow: var(--shadow); -webkit-tap-highlight-color: transparent; }
+.action-btn:active { background: var(--bg); }
 
 /* PANELS */
 .panel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: flex-end; }
 .panel-overlay.open { display: flex; }
-.panel-sheet { background: var(–surface); border-radius: 24px 24px 0 0; padding: 1.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom)); width: 100%; max-width: 500px; margin: 0 auto; max-height: 88vh; overflow-y: auto; }
+.panel-sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 1.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom)); width: 100%; max-width: 500px; margin: 0 auto; max-height: 88vh; overflow-y: auto; }
 .panel-sheet h2 { font-size: 1.4rem; font-weight: 300; margin-bottom: 1.2rem; }
-.panel-close { float: right; background: var(–border); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+.panel-close { float: right; background: var(--border); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
 
 /* DIARY */
 .diary-week { margin-bottom: 1.2rem; }
-.diary-week-label { font-size: 0.72rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(–muted); margin-bottom: 0.6rem; font-weight: 500; }
-.diary-entry { display: flex; gap: 0.8rem; padding: 0.7rem 0; border-bottom: 1px solid var(–border); align-items: flex-start; }
+.diary-week-label { font-size: 0.72rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; font-weight: 500; }
+.diary-entry { display: flex; gap: 0.8rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
 .diary-entry:last-child { border-bottom: none; }
 .diary-meta { min-width: 80px; }
-.diary-date-text { font-size: 0.72rem; color: var(–muted); display: block; }
-.diary-time-text { font-size: 0.72rem; font-weight: 500; color: var(–text); display: block; }
+.diary-date-text { font-size: 0.72rem; color: var(--muted); display: block; }
+.diary-time-text { font-size: 0.72rem; font-weight: 500; color: var(--text); display: block; }
 .diary-emoji-big { font-size: 1.2rem; flex-shrink: 0; padding-top: 2px; }
 .diary-right { flex: 1; }
-.diary-note-text { font-size: 0.82rem; color: var(–text); line-height: 1.5; }
+.diary-note-text { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
 .diary-actions { display: flex; gap: 0.5rem; margin-top: 0.3rem; }
-.diary-action-btn { font-size: 0.7rem; color: var(–muted); background: none; border: none; cursor: pointer; padding: 0; }
-.diary-action-btn:hover { color: var(–text); }
-.diary-edit-area { width: 100%; border: 1.5px solid var(–accent); border-radius: 8px; padding: 0.5rem 0.7rem; font-family: ‘Jost’, sans-serif; font-size: 0.82rem; color: var(–text); background: var(–bg); outline: none; resize: none; margin-top: 0.3rem; }
-.diary-save-edit { font-size: 0.72rem; color: var(–accent); background: none; border: none; cursor: pointer; margin-top: 0.3rem; font-family: ‘Jost’, sans-serif; }
-.diary-empty { font-size: 0.85rem; color: var(–muted); text-align: center; padding: 2rem 0; }
+.diary-action-btn { font-size: 0.7rem; color: var(--muted); background: none; border: none; cursor: pointer; padding: 0; }
+.diary-edit-area { width: 100%; border: 1.5px solid var(--accent); border-radius: 8px; padding: 0.5rem 0.7rem; font-family: 'Jost', sans-serif; font-size: 0.82rem; color: var(--text); background: var(--bg); outline: none; resize: none; margin-top: 0.3rem; }
+.diary-save-edit { font-size: 0.72rem; color: var(--accent); background: none; border: none; cursor: pointer; margin-top: 0.3rem; font-family: 'Jost', sans-serif; }
+.diary-empty { font-size: 0.85rem; color: var(--muted); text-align: center; padding: 2rem 0; }
 
 /* CHART */
 canvas#moodChart { width: 100% !important; }
 .chart-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.8rem; }
-.chart-legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(–muted); }
-.chart-dot { width: 8px; height: 8px; border-radius: 50%; background: var(–accent); }
+.chart-legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--muted); }
+.chart-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
 
 /* INSIGHTS */
-.insight-block { background: var(–bg); border-radius: 14px; padding: 1rem; margin-bottom: 0.8rem; }
+.insight-block { background: var(--bg); border-radius: 14px; padding: 1rem; margin-bottom: 0.8rem; }
 .insight-block h3 { font-size: 1rem; font-weight: 400; margin-bottom: 0.7rem; }
-.insight-row { display: flex; gap: 0.7rem; padding: 0.5rem 0; border-bottom: 1px solid var(–border); align-items: flex-start; }
+.insight-row { display: flex; gap: 0.7rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
 .insight-row:last-child { border-bottom: none; padding-bottom: 0; }
 .insight-icon { font-size: 1rem; flex-shrink: 0; width: 22px; text-align: center; }
-.insight-text { font-size: 0.80rem; color: var(–muted); line-height: 1.5; }
-.insight-text strong { display: block; font-size: 0.80rem; font-weight: 500; color: var(–text); margin-bottom: 0.1rem; }
-.insight-empty { font-size: 0.82rem; color: var(–muted); text-align: center; padding: 1.5rem 0; }
+.insight-text { font-size: 0.80rem; color: var(--muted); line-height: 1.5; }
+.insight-text strong { display: block; font-size: 0.80rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; }
+.insight-empty { font-size: 0.82rem; color: var(--muted); text-align: center; padding: 1.5rem 0; }
 
 /* SETTINGS */
-.form-hint { font-size: 0.78rem; color: var(–muted); margin-top: 0.4rem; }
 .data-btns { display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem; }
-.data-btn { padding: 0.9rem 1rem; border: 1.5px solid var(–border); border-radius: 12px; background: var(–bg); font-family: ‘Jost’, sans-serif; font-size: 0.85rem; cursor: pointer; color: var(–text); text-align: left; }
+.data-btn { padding: 0.9rem 1rem; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg); font-family: 'Jost', sans-serif; font-size: 0.85rem; cursor: pointer; color: var(--text); text-align: left; }
+
+/* IOS PROMPT */
+#ios-prompt { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-radius: 20px 20px 0 0; padding: 1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom)); box-shadow: 0 -4px 30px rgba(0,0,0,0.12); z-index: 200; text-align: center; }
+#ios-prompt.show { display: block; }
+#ios-prompt h3 { font-size: 1.2rem; font-weight: 400; margin-bottom: 0.5rem; }
+#ios-prompt p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+#ios-prompt .ios-steps { font-size: 0.82rem; color: var(--text); line-height: 2; }
+#ios-prompt .close-prompt { margin-top: 1rem; background: var(--bg); border: none; border-radius: 12px; padding: 0.7rem 1.5rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; cursor: pointer; color: var(--muted); width: 100%; }
 
 @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .bottom-space { height: 2rem; }
 </style>
-
 </head>
 <body>
 
-<!-- SETUP -->
+<div id="ios-prompt">
+  <h3 class="serif">Lägg till på hemskärmen</h3>
+  <p>Installera Humörloggen som en app på din iPhone.</p>
+  <div class="ios-steps">1. Tryck på <strong>dela-ikonen</strong> (□↑) i Safari<br>2. Välj <strong>"Lägg till på hemskärmen"</strong><br>3. Tryck <strong>"Lägg till"</strong></div>
+  <button class="close-prompt" onclick="dismissIOSPrompt()">Stäng</button>
+</div>
 
+<!-- SETUP -->
 <div id="setup-screen">
   <div class="setup-card">
     <div class="setup-logo">
       <h1>Humörloggen</h1>
       <p>Din dagliga humörlogg</p>
+      <p class="version">v0.1</p>
     </div>
     <div class="form-group">
       <label>Ditt namn</label>
@@ -151,13 +163,10 @@ canvas#moodChart { width: 100% !important; }
 </div>
 
 <!-- MAIN APP -->
-
 <div id="app-screen">
   <div class="top-bar">
     <span class="app-name">Humörloggen<span class="version-tag">v0.1</span></span>
-    <div style="display:flex;gap:0.5rem">
-      <div class="settings-btn" onclick="openSettings()">⚙️</div>
-    </div>
+    <div class="icon-btn" onclick="openSettings()">⚙️</div>
   </div>
   <div class="date-display" id="date-display"></div>
 
@@ -205,8 +214,7 @@ canvas#moodChart { width: 100% !important; }
   <div class="bottom-space"></div>
 </div>
 
-<!-- DIARY PANEL -->
-
+<!-- DIARY -->
 <div class="panel-overlay" id="diary-panel">
   <div class="panel-sheet">
     <button class="panel-close" onclick="closeDiary()">✕</button>
@@ -215,8 +223,7 @@ canvas#moodChart { width: 100% !important; }
   </div>
 </div>
 
-<!-- CHART PANEL -->
-
+<!-- CHART -->
 <div class="panel-overlay" id="chart-panel">
   <div class="panel-sheet">
     <button class="panel-close" onclick="closeChart()">✕</button>
@@ -228,8 +235,7 @@ canvas#moodChart { width: 100% !important; }
   </div>
 </div>
 
-<!-- INSIGHTS PANEL -->
-
+<!-- INSIGHTS -->
 <div class="panel-overlay" id="insights-panel">
   <div class="panel-sheet">
     <button class="panel-close" onclick="closeInsights()">✕</button>
@@ -238,8 +244,7 @@ canvas#moodChart { width: 100% !important; }
   </div>
 </div>
 
-<!-- SETTINGS PANEL -->
-
+<!-- SETTINGS -->
 <div class="panel-overlay" id="settings-panel">
   <div class="panel-sheet">
     <button class="panel-close" onclick="closeSettings()">✕</button>
@@ -261,7 +266,6 @@ canvas#moodChart { width: 100% !important; }
 const EMOJI_MAP = {1:'😞',2:'😕',3:'😐',4:'🙂',5:'😊'};
 let selectedMood = null;
 
-// ── HELPERS ──
 function nowTime() {
   const t = new Date();
   return `${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
@@ -272,8 +276,7 @@ function todayKey() {
 }
 function getLog() { try { return JSON.parse(localStorage.getItem('hl_log') || '{}'); } catch { return {}; } }
 function getAllEntries() {
-  const log = getLog();
-  const entries = [];
+  const log = getLog(), entries = [];
   Object.keys(log).sort().forEach(k => {
     const arr = Array.isArray(log[k]) ? log[k] : [log[k]];
     arr.forEach(e => entries.push({key:k, ...e}));
@@ -281,7 +284,6 @@ function getAllEntries() {
   return entries;
 }
 
-// ── MOOD ──
 function selectMood(val) {
   selectedMood = val;
   document.querySelectorAll('.mood-emoji-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.val) === val));
@@ -296,7 +298,7 @@ function saveMood() {
     const key = todayKey();
     if (!log[key]) log[key] = [];
     else if (!Array.isArray(log[key])) log[key] = [log[key]];
-    log[key].push({ mood: selectedMood, note, time, ts: `${key}T${time}` });
+    log[key].push({ mood: selectedMood, note, time });
     log[key].sort((a,b) => (a.time||'').localeCompare(b.time||''));
     localStorage.setItem('hl_log', JSON.stringify(log));
     selectedMood = null;
@@ -305,9 +307,8 @@ function saveMood() {
     document.getElementById('mood-time').value = nowTime();
     const el = document.getElementById('mood-saved'); el.style.display = 'block';
     setTimeout(() => el.style.display = 'none', 2000);
-    renderTodayLog();
-    updateStreak();
-  } catch(e) { alert('Kunde inte spara. Försök igen.'); }
+    renderTodayLog(); updateStreak();
+  } catch(e) { alert('Kunde inte spara: ' + e.message); }
 }
 
 function renderTodayLog() {
@@ -316,23 +317,20 @@ function renderTodayLog() {
   const el = document.getElementById('today-log');
   if (!arr.length) { el.innerHTML = ''; return; }
   el.innerHTML = arr.map(e =>
-    `<div class="today-item"><span class="today-time">${e.time||'--:--'}</span><span class="today-emoji">${EMOJI_MAP[e.mood]}</span><span class="today-note">${e.note||''}</span></div>`
+    `<div class="today-item"><span class="today-time">${e.time||'--:--'}</span><span class="today-emoji">${EMOJI_MAP[e.mood]}</span><span>${e.note||''}</span></div>`
   ).join('');
 }
 
-// ── STREAK & STATS ──
 function updateStreak() {
   const log = getLog();
   let streak = 0, d = new Date();
   for (let i = 0; i < 365; i++) {
     const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    if (log[k] && (Array.isArray(log[k]) ? log[k].length : true)) streak++;
+    if (log[k] && (Array.isArray(log[k]) ? log[k].length > 0 : true)) streak++;
     else if (i > 0) break;
     d.setDate(d.getDate() - 1);
   }
   document.getElementById('streak-count').textContent = `${streak} dag${streak !== 1 ? 'ar' : ''}`;
-
-  // 30-day avg
   const entries = getAllEntries();
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 30);
   const recent = entries.filter(e => new Date(e.key) >= cutoff);
@@ -344,13 +342,10 @@ function updateStreak() {
   }
 }
 
-// ── DIARY ──
 function openDiary() {
-  const log = getLog();
-  const allKeys = Object.keys(log).sort((a,b) => b.localeCompare(a));
+  const log = getLog(), allKeys = Object.keys(log).sort((a,b) => b.localeCompare(a));
   const el = document.getElementById('diary-content');
   if (!allKeys.length) { el.innerHTML = '<div class="diary-empty">Inga anteckningar ännu.<br>Börja logga idag!</div>'; document.getElementById('diary-panel').classList.add('open'); return; }
-
   const weeks = {};
   allKeys.forEach(k => {
     const d = new Date(k), monday = new Date(d);
@@ -360,20 +355,19 @@ function openDiary() {
     const arr = Array.isArray(log[k]) ? log[k] : [log[k]];
     arr.forEach(e => weeks[wk].push({key:k, ...e}));
   });
-
   el.innerHTML = Object.keys(weeks).sort((a,b) => b.localeCompare(a)).map(wk => {
     const m = new Date(wk), s = new Date(wk); s.setDate(m.getDate()+6);
     const fmt = d => d.toLocaleDateString('sv-SE', {day:'numeric', month:'short'});
     const entries = weeks[wk].map((e, idx) => {
       const dn = new Date(e.key).toLocaleDateString('sv-SE', {weekday:'short', day:'numeric', month:'short'});
-      const entryId = `${e.key}_${e.time||idx}`;
-      return `<div class="diary-entry" id="entry-${entryId}">
+      const eid = `${e.key}_${e.time||idx}`;
+      return `<div class="diary-entry" id="entry-${eid}">
         <div class="diary-meta"><span class="diary-date-text">${dn}</span><span class="diary-time-text">${e.time||'--:--'}</span></div>
         <div class="diary-emoji-big">${EMOJI_MAP[e.mood]}</div>
         <div class="diary-right">
-          <div class="diary-note-text" id="note-${entryId}">${e.note||'<span style="color:var(--muted);font-style:italic">Ingen anteckning</span>'}</div>
+          <div class="diary-note-text" id="note-${eid}">${e.note||'<span style="color:var(--muted);font-style:italic">Ingen anteckning</span>'}</div>
           <div class="diary-actions">
-            <button class="diary-action-btn" onclick="editEntry('${e.key}','${e.time||idx}','${(e.note||'').replace(/'/g,"\\'")}')">✏️ Redigera</button>
+            <button class="diary-action-btn" onclick="editEntry('${e.key}','${e.time||idx}','${(e.note||'').replace(/'/g,"\\'").replace(/\n/g,' ')}')">✏️ Redigera</button>
             <button class="diary-action-btn" style="color:#A63D2F" onclick="deleteEntry('${e.key}','${e.time||idx}')">🗑️ Ta bort</button>
           </div>
         </div>
@@ -381,228 +375,153 @@ function openDiary() {
     }).join('');
     return `<div class="diary-week"><div class="diary-week-label">${fmt(m)} – ${fmt(s)}</div>${entries}</div>`;
   }).join('');
-
   document.getElementById('diary-panel').classList.add('open');
 }
 function closeDiary() { document.getElementById('diary-panel').classList.remove('open'); }
 
 function editEntry(key, time, oldNote) {
-  const entryId = `${key}_${time}`;
-  const noteEl = document.getElementById(`note-${entryId}`);
-  if (noteEl.querySelector('textarea')) return;
-  noteEl.innerHTML = `<textarea class="diary-edit-area" id="edit-${entryId}" rows="2">${oldNote}</textarea><button class="diary-save-edit" onclick="saveEdit('${key}','${time}')">✓ Spara</button>`;
-
-document.getElementById(`edit-${entryId}`).focus();
+  const eid = `${key}_${time}`;
+  const noteEl = document.getElementById(`note-${eid}`);
+  if (!noteEl || noteEl.querySelector('textarea')) return;
+  noteEl.innerHTML = `<textarea class="diary-edit-area" id="edit-${eid}" rows="2">${oldNote}</textarea><button class="diary-save-edit" onclick="saveEdit('${key}','${time}')">✓ Spara</button>`;
+  document.getElementById(`edit-${eid}`).focus();
 }
-
 function saveEdit(key, time) {
-const entryId = `${key}_${time}`;
-const newNote = document.getElementById(`edit-${entryId}`).value.trim();
-const log = getLog();
-if (!log[key]) return;
-const arr = Array.isArray(log[key]) ? log[key] : [log[key]];
-const entry = arr.find(e => (e.time||’’) === time || String(arr.indexOf(e)) === time);
-if (entry) entry.note = newNote;
-localStorage.setItem(‘hl_log’, JSON.stringify(log));
-openDiary();
+  const eid = `${key}_${time}`;
+  const newNote = document.getElementById(`edit-${eid}`).value.trim();
+  const log = getLog();
+  if (!log[key]) return;
+  const arr = Array.isArray(log[key]) ? log[key] : [log[key]];
+  const entry = arr.find(e => (e.time||'') === time) || arr[parseInt(time)];
+  if (entry) { entry.note = newNote; localStorage.setItem('hl_log', JSON.stringify(log)); }
+  openDiary();
 }
-
 function deleteEntry(key, time) {
-if (!confirm(‘Är du säker på att du vill ta bort den här anteckningen?’)) return;
-const log = getLog();
-if (!log[key]) return;
-let arr = Array.isArray(log[key]) ? log[key] : [log[key]];
-arr = arr.filter(e => (e.time||’’) !== time && String(arr.indexOf(e)) !== time);
-if (!arr.length) delete log[key];
-else log[key] = arr;
-localStorage.setItem(‘hl_log’, JSON.stringify(log));
-openDiary();
-renderTodayLog();
-updateStreak();
+  if (!confirm('Är du säker på att du vill ta bort den här anteckningen?')) return;
+  const log = getLog();
+  if (!log[key]) return;
+  let arr = Array.isArray(log[key]) ? log[key] : [log[key]];
+  arr = arr.filter(e => (e.time||'') !== time);
+  if (!arr.length) delete log[key]; else log[key] = arr;
+  localStorage.setItem('hl_log', JSON.stringify(log));
+  openDiary(); renderTodayLog(); updateStreak();
 }
 
-// ── CHART ──
-let chartInst = null;
-function openChart() { document.getElementById(‘chart-panel’).classList.add(‘open’); setTimeout(renderChart, 150); }
-function closeChart() { document.getElementById(‘chart-panel’).classList.remove(‘open’); }
-
+function openChart() { document.getElementById('chart-panel').classList.add('open'); setTimeout(renderChart, 150); }
+function closeChart() { document.getElementById('chart-panel').classList.remove('open'); }
 function renderChart() {
-const entries = getAllEntries();
-const canvas = document.getElementById(‘moodChart’), ctx = canvas.getContext(‘2d’);
-const W = canvas.offsetWidth || 300, H = 220;
-canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
-ctx.scale(devicePixelRatio, devicePixelRatio);
-const pad = {top:20, right:20, bottom:35, left:30};
-const cw = W - pad.left - pad.right, ch = H - pad.top - pad.bottom;
-ctx.clearRect(0, 0, W, H);
-
-if (!entries.length) {
-ctx.fillStyle = ‘#8A8178’; ctx.font = ‘13px Jost,sans-serif’; ctx.textAlign = ‘center’;
-ctx.fillText(‘Ingen data ännu’, W/2, H/2); return;
+  const entries = getAllEntries();
+  const canvas = document.getElementById('moodChart'), ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 300, H = 220;
+  canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const pad = {top:20, right:20, bottom:35, left:30};
+  const cw = W-pad.left-pad.right, ch = H-pad.top-pad.bottom;
+  ctx.clearRect(0,0,W,H);
+  if (!entries.length) { ctx.fillStyle='#8A8178'; ctx.font='13px Jost,sans-serif'; ctx.textAlign='center'; ctx.fillText('Ingen data ännu', W/2, H/2); return; }
+  const bw = cw / Math.max(entries.length, 1);
+  for (let v=1; v<=5; v++) {
+    const y = pad.top + ch - ((v-1)/4)*ch;
+    ctx.strokeStyle='#EAE5DF'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(pad.left+cw,y); ctx.stroke();
+    ctx.fillStyle='#8A8178'; ctx.font='11px Jost,sans-serif'; ctx.textAlign='right'; ctx.fillText(EMOJI_MAP[v], pad.left-2, y+4);
+  }
+  if (entries.length > 1) {
+    ctx.beginPath();
+    entries.forEach((e,i) => { const x=pad.left+i*bw+bw/2, y=pad.top+ch-((e.mood-1)/4)*ch; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.lineTo(pad.left+(entries.length-1)*bw+bw/2, pad.top+ch); ctx.lineTo(pad.left+bw/2, pad.top+ch); ctx.closePath();
+    ctx.fillStyle='rgba(61,107,138,0.1)'; ctx.fill();
+    ctx.strokeStyle='#3D6B8A'; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.beginPath();
+    entries.forEach((e,i) => { const x=pad.left+i*bw+bw/2, y=pad.top+ch-((e.mood-1)/4)*ch; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.stroke();
+  }
+  entries.forEach((e,i) => {
+    const x=pad.left+i*bw+bw/2, y=pad.top+ch-((e.mood-1)/4)*ch;
+    ctx.fillStyle='#3D6B8A'; ctx.beginPath(); ctx.arc(x,y,3.5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(x,y,1.5,0,Math.PI*2); ctx.fill();
+  });
+  ctx.fillStyle='#8A8178'; ctx.font='9px Jost,sans-serif'; ctx.textAlign='center';
+  entries.forEach((e,i) => { if(i%Math.ceil(entries.length/6)===0) { const d=new Date(e.key); ctx.fillText(d.toLocaleDateString('sv-SE',{day:'numeric',month:'short'}), pad.left+i*bw+bw/2, H-6); } });
 }
 
-const bw = cw / Math.max(entries.length, 1);
-
-// Grid
-for (let v = 1; v <= 5; v++) {
-const y = pad.top + ch - ((v-1)/4)*ch;
-ctx.strokeStyle = ‘#EAE5DF’; ctx.lineWidth = 1;
-ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left+cw, y); ctx.stroke();
-ctx.fillStyle = ‘#8A8178’; ctx.font = ‘11px Jost,sans-serif’; ctx.textAlign = ‘right’;
-ctx.fillText(EMOJI_MAP[v], pad.left-2, y+4);
-}
-
-// Area fill
-if (entries.length > 1) {
-ctx.beginPath();
-entries.forEach((e,i) => {
-const x = pad.left + i*bw + bw/2, y = pad.top + ch - ((e.mood-1)/4)*ch;
-i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-});
-ctx.lineTo(pad.left + (entries.length-1)*bw + bw/2, pad.top+ch);
-ctx.lineTo(pad.left + bw/2, pad.top+ch);
-ctx.closePath();
-ctx.fillStyle = ‘rgba(61,107,138,0.1)’; ctx.fill();
-}
-
-// Line
-if (entries.length > 1) {
-ctx.strokeStyle = ‘#3D6B8A’; ctx.lineWidth = 2; ctx.lineJoin = ‘round’;
-ctx.beginPath();
-entries.forEach((e,i) => {
-const x = pad.left + i*bw + bw/2, y = pad.top + ch - ((e.mood-1)/4)*ch;
-i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-});
-ctx.stroke();
-}
-
-// Dots
-entries.forEach((e,i) => {
-const x = pad.left + i*bw + bw/2, y = pad.top + ch - ((e.mood-1)/4)*ch;
-ctx.fillStyle = ‘#3D6B8A’; ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI*2); ctx.fill();
-ctx.fillStyle = ‘#fff’; ctx.beginPath(); ctx.arc(x, y, 1.5, 0, Math.PI*2); ctx.fill();
-});
-
-// X labels
-ctx.fillStyle = ‘#8A8178’; ctx.font = ‘9px Jost,sans-serif’; ctx.textAlign = ‘center’;
-entries.forEach((e,i) => {
-if (i % Math.ceil(entries.length/6) === 0) {
-const d = new Date(e.key);
-ctx.fillText(d.toLocaleDateString(‘sv-SE’, {day:‘numeric’, month:‘short’}), pad.left+i*bw+bw/2, H-6);
-}
-});
-}
-
-// ── INSIGHTS ──
 function openInsights() {
-const entries = getAllEntries();
-const name = localStorage.getItem(‘hl_name’) || ‘du’;
-const el = document.getElementById(‘insights-content’);
-
-if (entries.length < 5) {
-el.innerHTML = ‘<div class="insight-empty">Fortsätt logga — insikterna växer fram när det finns mer data. Logga varje dag! 📈</div>’;
-document.getElementById(‘insights-panel’).classList.add(‘open’);
-return;
+  const entries = getAllEntries(), el = document.getElementById('insights-content');
+  if (entries.length < 5) { el.innerHTML = '<div class="insight-empty">Fortsätt logga — insikterna växer fram när det finns mer data. 📈</div>'; document.getElementById('insights-panel').classList.add('open'); return; }
+  const avg = arr => arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1) : null;
+  const allMoods = entries.map(e=>e.mood);
+  const totalAvg = avg(allMoods);
+  const dayGroups = {0:[],1:[],2:[],3:[],4:[],5:[],6:[]};
+  const dayNames = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
+  entries.forEach(e => { const d=new Date(e.key); dayGroups[d.getDay()].push(e.mood); });
+  const dayAvgs = Object.keys(dayGroups).filter(d=>dayGroups[d].length>0).sort((a,b)=>avg(dayGroups[b])-avg(dayGroups[a]));
+  const bestDay=dayAvgs[0], worstDay=dayAvgs[dayAvgs.length-1];
+  const hourGroups = {morning:[],afternoon:[],evening:[]};
+  entries.forEach(e => { const h=parseInt((e.time||'12:00').split(':')[0]); if(h<12)hourGroups.morning.push(e.mood); else if(h<17)hourGroups.afternoon.push(e.mood); else hourGroups.evening.push(e.mood); });
+  const hourLabels = {morning:'på morgnarna',afternoon:'på eftermiddagarna',evening:'på kvällarna'};
+  const hourAvgs = Object.keys(hourGroups).filter(h=>hourGroups[h].length>0).sort((a,b)=>avg(hourGroups[b])-avg(hourGroups[a]));
+  const last7=entries.slice(-7).map(e=>e.mood), prev7=entries.slice(-14,-7).map(e=>e.mood);
+  const last7avg=avg(last7), prev7avg=avg(prev7);
+  const trend=last7avg&&prev7avg?(parseFloat(last7avg)-parseFloat(prev7avg)).toFixed(1):null;
+  el.innerHTML=`
+    <div class="insight-block"><h3>📊 Översikt</h3>
+      <div class="insight-row"><div class="insight-icon">📈</div><div class="insight-text"><strong>Totalt snitt</strong>${totalAvg} av 5 — ${entries.length} loggningar.</div></div>
+      <div class="insight-row"><div class="insight-icon">🔥</div><div class="insight-text"><strong>Senaste 7 dagarna</strong>Snitt ${last7avg||'—'} av 5.</div></div>
+      ${trend?`<div class="insight-row"><div class="insight-icon">${parseFloat(trend)>0?'⬆️':'⬇️'}</div><div class="insight-text"><strong>Trend</strong>${parseFloat(trend)>0?'Bättre':'Sämre'} än föregående vecka (${trend>0?'+':''}${trend}).</div></div>`:''}
+    </div>
+    <div class="insight-block"><h3>🗓️ Mönster</h3>
+      ${bestDay!==undefined?`<div class="insight-row"><div class="insight-icon">😊</div><div class="insight-text"><strong>Bästa dagen</strong>${dayNames[bestDay]} — snitt ${avg(dayGroups[bestDay])} av 5.</div></div>`:''}
+      ${worstDay!==undefined&&worstDay!==bestDay?`<div class="insight-row"><div class="insight-icon">😔</div><div class="insight-text"><strong>Tuffast dag</strong>${dayNames[worstDay]} — snitt ${avg(dayGroups[worstDay])} av 5.</div></div>`:''}
+      ${hourAvgs[0]?`<div class="insight-row"><div class="insight-icon">🕐</div><div class="insight-text"><strong>Bäst ${hourLabels[hourAvgs[0]]}</strong>Snitt ${avg(hourGroups[hourAvgs[0]])} av 5.</div></div>`:''}
+    </div>`;
+  document.getElementById('insights-panel').classList.add('open');
 }
+function closeInsights() { document.getElementById('insights-panel').classList.remove('open'); }
 
-const avg = arr => arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1) : null;
-const allMoods = entries.map(e => e.mood);
-const totalAvg = avg(allMoods);
-
-// Day of week analysis
-const dayGroups = {0:[],1:[],2:[],3:[],4:[],5:[],6:[]};
-const dayNames = [‘Söndag’,‘Måndag’,‘Tisdag’,‘Onsdag’,‘Torsdag’,‘Fredag’,‘Lördag’];
-entries.forEach(e => { const d = new Date(e.key); dayGroups[d.getDay()].push(e.mood); });
-const dayAvgs = Object.keys(dayGroups).filter(d => dayGroups[d].length > 0).sort((a,b) => avg(dayGroups[b])-avg(dayGroups[a]));
-const bestDay = dayAvgs[0], worstDay = dayAvgs[dayAvgs.length-1];
-
-// Time of day
-const hourGroups = {morning:[], afternoon:[], evening:[]};
-entries.forEach(e => {
-const h = parseInt((e.time||‘12:00’).split(’:’)[0]);
-if (h < 12) hourGroups.morning.push(e.mood);
-else if (h < 17) hourGroups.afternoon.push(e.mood);
-else hourGroups.evening.push(e.mood);
-});
-const hourLabels = {morning:‘på morgnarna’, afternoon:‘på eftermiddagarna’, evening:‘på kvällarna’};
-const hourAvgs = Object.keys(hourGroups).filter(h => hourGroups[h].length > 0).sort((a,b) => avg(hourGroups[b])-avg(hourGroups[a]));
-const bestHour = hourAvgs[0];
-
-// Trend last 7 vs prev 7
-const last7 = entries.slice(-7).map(e=>e.mood);
-const prev7 = entries.slice(-14,-7).map(e=>e.mood);
-const last7avg = avg(last7), prev7avg = avg(prev7);
-const trend = last7avg && prev7avg ? (parseFloat(last7avg) - parseFloat(prev7avg)).toFixed(1) : null;
-
-el.innerHTML = `<div class="insight-block"> <h3>📊 Översikt</h3> <div class="insight-row"><div class="insight-icon">📈</div><div class="insight-text"><strong>Totalt snitt</strong>${totalAvg} av 5 baserat på ${entries.length} loggningar.</div></div> <div class="insight-row"><div class="insight-icon">🔥</div><div class="insight-text"><strong>Senaste 7 dagarna</strong>Snitt ${last7avg||'—'} av 5.</div></div> ${trend ?`<div class="insight-row"><div class="insight-icon">${parseFloat(trend)>0?‘⬆️’:‘⬇️’}</div><div class="insight-text"><strong>Trend</strong>${parseFloat(trend)>0?‘Bättre’:‘Sämre’} än föregående vecka (${trend > 0 ? ‘+’:’’}${trend}).</div></div>` : ''} </div> <div class="insight-block"> <h3>🗓️ Mönster</h3> ${bestDay!==undefined?`<div class="insight-row"><div class="insight-icon">😊</div><div class="insight-text"><strong>Bästa dagen</strong>${dayNames[bestDay]} — snitt ${avg(dayGroups[bestDay])} av 5.</div></div>`:''} ${worstDay!==undefined&&worstDay!==bestDay?`<div class="insight-row"><div class="insight-icon">😔</div><div class="insight-text"><strong>Tuffast dag</strong>${dayNames[worstDay]} — snitt ${avg(dayGroups[worstDay])} av 5.</div></div>`:''} ${bestHour?`<div class="insight-row"><div class="insight-icon">🕐</div><div class="insight-text"><strong>Bäst ${hourLabels[bestHour]}</strong>Snitt ${avg(hourGroups[bestHour])} av 5.</div></div>`:''} </div> <div class="insight-block"> <h3>💡 Tips</h3> <div class="insight-row"><div class="insight-icon">📝</div><div class="insight-text">Skriv alltid en anteckning — det gör insikterna mer värdefulla.</div></div> <div class="insight-row"><div class="insight-icon">⏰</div><div class="insight-text">Logga vid samma tillfällen varje dag för bättre mönster.</div></div> </div> `;
-document.getElementById(‘insights-panel’).classList.add(‘open’);
-}
-function closeInsights() { document.getElementById(‘insights-panel’).classList.remove(‘open’); }
-
-// ── EXPORT / IMPORT ──
 function exportData() {
-const data = { version:‘1.0’, exported:new Date().toISOString(), name:localStorage.getItem(‘hl_name’), log:getLog() };
-const blob = new Blob([JSON.stringify(data,null,2)], {type:‘application/json’});
-const url = URL.createObjectURL(blob);
-const a = document.createElement(‘a’);
-a.href = url; a.download = `humorloggen-${todayKey()}.json`;
-document.body.appendChild(a); a.click(); document.body.removeChild(a);
-URL.revokeObjectURL(url);
+  const data = {version:'0.1', exported:new Date().toISOString(), name:localStorage.getItem('hl_name'), log:getLog()};
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=`humorloggen-${todayKey()}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 function importData(event) {
-const file = event.target.files[0]; if (!file) return;
-const reader = new FileReader();
-reader.onload = e => {
-try {
-const data = JSON.parse(e.target.result);
-if (data.name) localStorage.setItem(‘hl_name’, data.name);
-if (data.log) localStorage.setItem(‘hl_log’, JSON.stringify(data.log));
-alert(‘✓ Data importerad!’); closeSettings(); loadApp();
-} catch { alert(‘Kunde inte läsa filen.’); }
-};
-reader.readAsText(file);
+  const file = event.target.files[0]; if(!file)return;
+  const reader = new FileReader();
+  reader.onload = e => { try { const d=JSON.parse(e.target.result); if(d.name)localStorage.setItem('hl_name',d.name); if(d.log)localStorage.setItem('hl_log',JSON.stringify(d.log)); alert('✓ Data importerad!'); closeSettings(); loadApp(); } catch { alert('Kunde inte läsa filen.'); } };
+  reader.readAsText(file);
 }
 
-// ── SETTINGS ──
-function openSettings() {
-document.getElementById(‘settings-name’).value = localStorage.getItem(‘hl_name’) || ‘’;
-document.getElementById(‘settings-panel’).classList.add(‘open’);
-}
-function closeSettings() { document.getElementById(‘settings-panel’).classList.remove(‘open’); }
-function saveSettings() {
-const name = document.getElementById(‘settings-name’).value.trim();
-if (name) localStorage.setItem(‘hl_name’, name);
-closeSettings(); loadApp();
-}
+function openSettings() { document.getElementById('settings-name').value=localStorage.getItem('hl_name')||''; document.getElementById('settings-panel').classList.add('open'); }
+function closeSettings() { document.getElementById('settings-panel').classList.remove('open'); }
+function saveSettings() { const name=document.getElementById('settings-name').value.trim(); if(name)localStorage.setItem('hl_name',name); closeSettings(); loadApp(); }
 
-// ── SETUP ──
 function setupApp() {
-const name = document.getElementById(‘input-name’).value.trim() || ‘Daniel’;
-try { localStorage.setItem(‘hl_name’, name); } catch(e) {}
-document.getElementById(‘setup-screen’).style.display = ‘none’;
-loadApp();
+  const name = document.getElementById('input-name').value.trim() || 'Daniel';
+  localStorage.setItem('hl_name', name);
+  document.getElementById('setup-screen').style.display = 'none';
+  loadApp();
 }
 
-// ── LOAD ──
 function loadApp() {
-document.getElementById(‘setup-screen’).style.display = ‘none’;
-document.getElementById(‘app-screen’).style.display = ‘block’;
-const today = new Date();
-const ds = today.toLocaleDateString(‘sv-SE’, {weekday:‘long’, day:‘numeric’, month:‘long’});
-document.getElementById(‘date-display’).textContent = ds.charAt(0).toUpperCase() + ds.slice(1);
-document.getElementById(‘mood-time’).value = nowTime();
-renderTodayLog();
-updateStreak();
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('app-screen').style.display = 'block';
+  const today = new Date();
+  const ds = today.toLocaleDateString('sv-SE', {weekday:'long', day:'numeric', month:'long'});
+  document.getElementById('date-display').textContent = ds.charAt(0).toUpperCase() + ds.slice(1);
+  document.getElementById('mood-time').value = nowTime();
+  renderTodayLog(); updateStreak();
 }
 
-// ── INIT ──
-window.addEventListener(‘load’, () => {
-try {
-if (localStorage.getItem(‘hl_name’)) { loadApp(); return; }
-} catch(e) {}
-document.getElementById(‘setup-screen’).style.display = ‘flex’;
+function dismissIOSPrompt() { document.getElementById('ios-prompt').classList.remove('show'); }
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+if (isIOS && !isStandalone) { setTimeout(() => { if(localStorage.getItem('hl_name')) document.getElementById('ios-prompt').classList.add('show'); }, 4000); }
+
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {})); }
+
+window.addEventListener('load', () => {
+  if (localStorage.getItem('hl_name')) loadApp();
+  else document.getElementById('setup-screen').style.display = 'flex';
 });
 </script>
-
 </body>
 </html>
