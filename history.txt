@@ -1,0 +1,37 @@
+Humörloggen – Versionshistorik
+==============================
+
+v0.3 (aktuell)
+--------------
+• Berättelse-funktionen aktiverad (regelbaserad, utan API)
+  – Varm eller analytisk stil
+  – Välj period: vecka, månad, allt eller eget intervall
+  – Kort eller lång version
+• Versionshistorik tillgänglig inifrån appen (Inställningar → Historik)
+
+v0.2
+----
+• Unik id per loggning (ersätter time som nyckel)
+• getLog() cachas i minnet för bättre prestanda
+• Specialtecken i anteckningar hanteras via escHtml()
+• Bekräftelse innan import av data
+• Service worker uppgraderad till humorloggen-v02
+
+v0.1
+----
+• Namninmatning vid första start
+• Logga humör med 5 emojis: 😞 😕 😐 🙂 😊
+• Klockslag per loggning (kan läggas in bakåt i tid)
+• Valfri fritextanteckning
+• Flera loggningar per dag
+• Dagens loggningar visas – senaste överst
+• Streak-räknare och snitthumör senaste 30 dagarna
+• Dagbok grupperad vecka för vecka
+• Redigera/ta bort anteckning med bekräftelsefråga
+• Humörgraf med area-fill
+• Insikter: snitt, trend, bästa/sämsta dag, helg vs vardag,
+  klockslag (3h-buckets), längsta glada period, konsistens,
+  bästa/sämsta vecka, gladaste stunden, loggfrekvens vs humör,
+  ordfrekvens i anteckningar
+• Export/import av data
+• iOS-installationsprompt
