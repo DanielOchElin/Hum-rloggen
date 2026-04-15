@@ -22,6 +22,8 @@
 html, body { height: 100%; overflow-x: hidden; }
 body { font-family: 'Jost', sans-serif; background: var(--bg); color: var(--text-inv); min-height: 100vh; font-weight: 300; -webkit-font-smoothing: antialiased; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
 h1,h2,h3,.serif { font-family: 'Cormorant Garamond', serif; }
+
+/* ── Setup ── */
 #setup-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem; background: linear-gradient(160deg, #3A3D42 0%, #2C2F34 100%); }
 .setup-card { background: var(--surface); border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 8px 40px rgba(0,0,0,0.30); }
 .setup-logo { text-align: center; margin-bottom: 2rem; }
@@ -34,20 +36,23 @@ h1,h2,h3,.serif { font-family: 'Cormorant Garamond', serif; }
 .form-group input:focus { border-color: var(--accent); }
 .btn-primary { width: 100%; padding: 1rem; background: var(--accent); color: var(--surface); border: none; border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 0.5rem; }
 .btn-primary:active { transform: scale(0.98); opacity: 0.85; }
+
+/* ── App ── */
 #app-screen { display: none; }
 .top-bar { padding: 1rem 1.2rem 0.5rem; display: flex; align-items: center; justify-content: space-between; }
 .app-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; color: var(--text-inv); }
 .version-tag { font-size: 0.62rem; font-family: 'Jost', sans-serif; font-weight: 400; color: var(--muted); letter-spacing: 0.08em; vertical-align: middle; margin-left: 4px; }
 .icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; }
 .date-display { font-size: 0.78rem; color: var(--muted); text-align: right; margin: 0 1.2rem 0.8rem; }
-.streak-bar { margin: 0 1.2rem 1.2rem; background: var(--surface); border-radius: 16px; padding: 1rem 1.2rem; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; animation: fadeUp 0.4s ease both; }
-.streak-left { display: flex; align-items: center; gap: 0.7rem; }
-.streak-icon { font-size: 1.5rem; }
-.streak-text strong { display: block; font-size: 1rem; font-weight: 500; color: var(--text); }
-.streak-text span { font-size: 0.78rem; color: var(--muted); }
-.streak-avg { text-align: right; }
-.streak-avg strong { display: block; font-size: 1rem; font-weight: 500; color: var(--text); }
-.streak-avg span { font-size: 0.78rem; color: var(--muted); }
+
+/* ── Streak-bar ── */
+.streak-bar { margin: 0 1.2rem 1.2rem; background: var(--surface); border-radius: 16px; padding: 0.9rem 1.2rem; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; animation: fadeUp 0.4s ease both; }
+.streak-cell { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.streak-cell strong { font-size: 0.95rem; font-weight: 500; color: var(--text); }
+.streak-cell span { font-size: 0.70rem; color: var(--muted); margin-top: 0.1rem; text-align: center; }
+.streak-divider { width: 1px; height: 32px; background: var(--border); }
+
+/* ── Log card ── */
 .section { margin: 0 1.2rem 1.2rem; animation: fadeUp 0.4s 0.1s ease both; }
 .section-title { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; font-weight: 500; }
 .log-card { background: var(--surface); border-radius: 16px; padding: 1.3rem; box-shadow: var(--shadow); }
@@ -56,6 +61,7 @@ h1,h2,h3,.serif { font-family: 'Cormorant Garamond', serif; }
 .mood-emoji-btn.selected { opacity: 1; transform: scale(1.2); }
 .mood-time-row { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.8rem; }
 .mood-time-row label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.mood-date-input { flex: 1.4; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.5rem 0.8rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--text); background: rgba(255,255,255,0.45); outline: none; }
 .mood-time-input { flex: 1; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.5rem 0.8rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--text); background: rgba(255,255,255,0.45); outline: none; }
 .mood-note { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.7rem 0.9rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--text); background: rgba(255,255,255,0.45); outline: none; resize: none; min-height: 60px; transition: border-color 0.2s; }
 .mood-note:focus { border-color: var(--accent); }
@@ -66,18 +72,25 @@ h1,h2,h3,.serif { font-family: 'Cormorant Garamond', serif; }
 .today-item { display: flex; gap: 0.6rem; align-items: center; font-size: 0.78rem; color: var(--muted); background: rgba(255,255,255,0.3); border-radius: 8px; padding: 0.4rem 0.7rem; }
 .today-time { font-weight: 500; color: var(--text); min-width: 42px; }
 .today-emoji { font-size: 1rem; }
+.today-show-all { margin-top: 0.5rem; font-size: 0.75rem; color: var(--muted); background: none; border: none; font-family: 'Jost', sans-serif; cursor: pointer; padding: 0.2rem 0; text-decoration: underline; -webkit-tap-highlight-color: transparent; }
+
+/* ── Action buttons ── */
 .action-btns { display: flex; gap: 0.6rem; margin: 0 1.2rem 1.2rem; flex-wrap: wrap; }
 .action-btn { flex: 1; min-width: calc(50% - 0.3rem); padding: 0.8rem 0.5rem; background: var(--surface); border: none; border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.80rem; color: var(--text); cursor: pointer; text-align: center; box-shadow: var(--shadow); -webkit-tap-highlight-color: transparent; font-weight: 400; }
 .action-btn:active { opacity: 0.8; }
 .action-btn.story-btn { background: var(--accent); color: var(--surface); }
+
+/* ── Panels ── */
 .panel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: flex-end; }
 .panel-overlay.open { display: flex; }
 .panel-sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 1.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom)); width: 100%; max-width: 500px; margin: 0 auto; max-height: 88vh; overflow-y: auto; }
 .panel-sheet h2 { font-size: 1.4rem; font-weight: 300; margin-bottom: 1.2rem; color: var(--text); }
 .panel-close { float: right; background: var(--border); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; color: var(--text); }
-.diary-week { margin-bottom: 1.2rem; }
+
+/* ── Dagbok ── */
+.diary-week { margin-bottom: 1.6rem; }
 .diary-week-label { font-size: 0.72rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; font-weight: 500; }
-.diary-entry { display: flex; gap: 0.8rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.diary-entry { display: flex; gap: 0.8rem; padding: 0.9rem 0; border-bottom: 2px solid var(--border); align-items: flex-start; }
 .diary-entry:last-child { border-bottom: none; }
 .diary-meta { min-width: 80px; }
 .diary-date-text { font-size: 0.72rem; color: var(--muted); display: block; }
@@ -90,7 +103,13 @@ h1,h2,h3,.serif { font-family: 'Cormorant Garamond', serif; }
 .diary-edit-area { width: 100%; border: 1.5px solid var(--accent); border-radius: 8px; padding: 0.5rem 0.7rem; font-family: 'Jost', sans-serif; font-size: 0.82rem; color: var(--text); background: rgba(255,255,255,0.5); outline: none; resize: none; margin-top: 0.3rem; }
 .diary-save-edit { font-size: 0.72rem; color: var(--accent); background: none; border: none; cursor: pointer; margin-top: 0.3rem; font-family: 'Jost', sans-serif; font-weight: 500; }
 .diary-empty { font-size: 0.85rem; color: var(--muted); text-align: center; padding: 2rem 0; }
-canvas#moodChart { width: 100% !important; }
+
+/* ── Graf ── */
+canvas#moodChart { width: 100% !important; cursor: pointer; }
+.chart-tooltip { position: absolute; background: var(--accent); color: var(--surface); border-radius: 10px; padding: 0.6rem 0.9rem; font-size: 0.78rem; font-family: 'Jost', sans-serif; pointer-events: none; display: none; z-index: 10; max-width: 200px; line-height: 1.5; }
+.chart-wrap { position: relative; }
+
+/* ── Insikter ── */
 .insight-block { background: var(--accent-light); border-radius: 14px; padding: 1rem; margin-bottom: 0.8rem; }
 .insight-block h3 { font-size: 1rem; font-weight: 400; margin-bottom: 0.7rem; color: var(--text); }
 .insight-row { display: flex; gap: 0.7rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
@@ -99,6 +118,8 @@ canvas#moodChart { width: 100% !important; }
 .insight-text { font-size: 0.80rem; color: var(--muted); line-height: 1.5; }
 .insight-text strong { display: block; font-size: 0.80rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; }
 .insight-empty { font-size: 0.82rem; color: var(--muted); text-align: center; padding: 1.5rem 0; }
+
+/* ── Berättelse ── */
 .story-controls { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.2rem; }
 .story-control-label { font-size: 0.72rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; font-weight: 500; }
 .story-btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
@@ -110,20 +131,27 @@ canvas#moodChart { width: 100% !important; }
 .story-generate-btn { width: 100%; padding: 0.9rem; background: var(--accent); color: var(--surface); border: none; border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.88rem; font-weight: 500; cursor: pointer; letter-spacing: 0.04em; }
 .story-generate-btn:active { opacity: 0.8; }
 .story-output { margin-top: 1.2rem; padding: 1.2rem; background: var(--accent-light); border-radius: 14px; font-size: 0.88rem; line-height: 1.85; color: var(--text); font-family: 'Cormorant Garamond', serif; font-weight: 300; }
+.story-output.analytical { font-family: 'Jost', sans-serif; font-size: 0.82rem; line-height: 1.7; letter-spacing: 0.01em; }
+
+/* ── Inställningar ── */
 .data-btns { display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem; }
 .data-btn { padding: 0.9rem 1rem; border: 1.5px solid var(--border); border-radius: 12px; background: rgba(255,255,255,0.4); font-family: 'Jost', sans-serif; font-size: 0.85rem; cursor: pointer; color: var(--text); text-align: left; }
+
+/* ── Versionshistorik ── */
 .history-version { margin-bottom: 1.4rem; }
 .history-version-title { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 500; color: var(--accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
 .history-badge { font-size: 0.62rem; background: var(--accent); color: var(--surface); border-radius: 6px; padding: 2px 8px; font-family: 'Jost', sans-serif; letter-spacing: 0.06em; font-weight: 400; }
 .history-item { font-size: 0.80rem; color: var(--muted); line-height: 1.8; padding-left: 0.8rem; }
+
+/* ── iOS-prompt ── */
 #ios-prompt { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-radius: 20px 20px 0 0; padding: 1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom)); box-shadow: 0 -4px 30px rgba(0,0,0,0.20); z-index: 200; text-align: center; }
 #ios-prompt.show { display: block; }
 #ios-prompt h3 { font-size: 1.2rem; font-weight: 400; margin-bottom: 0.5rem; color: var(--text); }
 #ios-prompt p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
 #ios-prompt .ios-steps { font-size: 0.82rem; color: var(--text); line-height: 2; }
 #ios-prompt .close-prompt { margin-top: 1rem; background: var(--accent-light); border: none; border-radius: 12px; padding: 0.7rem 1.5rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; cursor: pointer; color: var(--muted); width: 100%; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
 .bottom-space { height: 2rem; }
 </style>
 </head>
@@ -141,7 +169,7 @@ canvas#moodChart { width: 100% !important; }
     <div class="setup-logo">
       <h1>Humörloggen</h1>
       <p>Din dagliga humörlogg</p>
-      <p class="version">v0.3</p>
+      <p class="version">v0.4</p>
     </div>
     <div class="form-group">
       <label>Ditt namn</label>
@@ -153,17 +181,33 @@ canvas#moodChart { width: 100% !important; }
 
 <div id="app-screen">
   <div class="top-bar">
-    <span class="app-name">Humörloggen<span class="version-tag">v0.3</span></span>
-    <div class="icon-btn" onclick="openSettings()">⚙️</div>
+    <span class="app-name">Humörloggen<span class="version-tag">v0.4</span></span>
+    <div class="icon-btn" onclick="openPanel('settings-panel')">⚙️</div>
   </div>
   <div class="date-display" id="date-display"></div>
+
   <div class="streak-bar">
-    <div class="streak-left">
-      <div class="streak-icon">🔥</div>
-      <div class="streak-text"><strong id="streak-count">0 dagar</strong><span>i rad</span></div>
+    <div class="streak-cell">
+      <strong id="streak-count">0</strong>
+      <span>🔥 streak</span>
     </div>
-    <div class="streak-avg"><strong id="avg-mood">—</strong><span>snitt 30 dagar</span></div>
+    <div class="streak-divider"></div>
+    <div class="streak-cell">
+      <strong id="yesterday-mood">—</strong>
+      <span>igår</span>
+    </div>
+    <div class="streak-divider"></div>
+    <div class="streak-cell">
+      <strong id="avg-mood">—</strong>
+      <span>snitt 30 d</span>
+    </div>
+    <div class="streak-divider"></div>
+    <div class="streak-cell">
+      <strong id="total-avg">—</strong>
+      <span>totalt</span>
+    </div>
   </div>
+
   <div class="section">
     <div class="section-title">Hur mår du just nu?</div>
     <div class="log-card">
@@ -175,7 +219,9 @@ canvas#moodChart { width: 100% !important; }
         <button class="mood-emoji-btn" data-val="5" onclick="selectMood(5)">😊</button>
       </div>
       <div class="mood-time-row">
-        <label>Klockslag</label>
+        <label>Datum</label>
+        <input type="date" class="mood-date-input" id="mood-date" onchange="renderTodayLog()" />
+        <label>Kl</label>
         <input type="time" class="mood-time-input" id="mood-time" />
       </div>
       <textarea class="mood-note" id="mood-note" placeholder="Vad händer? Hur känns det?…" rows="3"></textarea>
@@ -184,49 +230,57 @@ canvas#moodChart { width: 100% !important; }
       <div class="today-log" id="today-log"></div>
     </div>
   </div>
+
   <div class="action-btns">
-    <button class="action-btn" onclick="openDiary()">📓 Dagbok</button>
-    <button class="action-btn" onclick="openChart()">📈 Graf</button>
-    <button class="action-btn" onclick="openInsights()">🔍 Insikter</button>
-    <button class="action-btn story-btn" onclick="openStory()">✨ Berättelse</button>
+    <button class="action-btn" onclick="openPanel('diary-panel'); renderDiary()">📓 Dagbok</button>
+    <button class="action-btn" onclick="openPanel('chart-panel'); setTimeout(renderChart,150)">📈 Graf</button>
+    <button class="action-btn" onclick="openPanel('insights-panel'); renderInsights()">🔍 Insikter</button>
+    <button class="action-btn story-btn" onclick="openPanel('story-panel'); initStory()">✨ Berättelse</button>
   </div>
   <div class="bottom-space"></div>
 </div>
 
+<!-- Dagbok -->
 <div class="panel-overlay" id="diary-panel">
   <div class="panel-sheet">
-    <button class="panel-close" onclick="closeDiary()">✕</button>
+    <button class="panel-close" onclick="closePanel('diary-panel')">✕</button>
     <h2 class="serif">Dagbok</h2>
     <div id="diary-content"></div>
   </div>
 </div>
 
+<!-- Graf -->
 <div class="panel-overlay" id="chart-panel">
   <div class="panel-sheet">
-    <button class="panel-close" onclick="closeChart()">✕</button>
+    <button class="panel-close" onclick="closePanel('chart-panel')">✕</button>
     <h2 class="serif">Humörgraf</h2>
-    <canvas id="moodChart" height="220"></canvas>
+    <div class="chart-wrap">
+      <canvas id="moodChart" height="220"></canvas>
+      <div class="chart-tooltip" id="chart-tooltip"></div>
+    </div>
   </div>
 </div>
 
+<!-- Insikter -->
 <div class="panel-overlay" id="insights-panel">
   <div class="panel-sheet">
-    <button class="panel-close" onclick="closeInsights()">✕</button>
+    <button class="panel-close" onclick="closePanel('insights-panel')">✕</button>
     <h2 class="serif">Insikter</h2>
     <div id="insights-content"></div>
   </div>
 </div>
 
+<!-- Berättelse -->
 <div class="panel-overlay" id="story-panel">
   <div class="panel-sheet">
-    <button class="panel-close" onclick="closeStory()">✕</button>
+    <button class="panel-close" onclick="closePanel('story-panel')">✕</button>
     <h2 class="serif">Berättelse</h2>
     <div class="story-controls">
       <div>
-        <div class="story-control-label">Stil</div>
+        <div class="story-control-label">Typ</div>
         <div class="story-btn-group">
-          <button class="story-toggle active" id="style-warm" onclick="setStoryOpt('style','warm')">🌿 Varm</button>
-          <button class="story-toggle" id="style-analytical" onclick="setStoryOpt('style','analytical')">📊 Analytisk</button>
+          <button class="story-toggle active" id="type-story" onclick="setStoryOpt('type','story')">📖 Berättelse</button>
+          <button class="story-toggle" id="type-analysis" onclick="setStoryOpt('type','analysis')">🤖 Analys</button>
         </div>
       </div>
       <div>
@@ -246,22 +300,16 @@ canvas#moodChart { width: 100% !important; }
           <input type="date" class="story-date-input" id="story-date-to" />
         </div>
       </div>
-      <div>
-        <div class="story-control-label">Längd</div>
-        <div class="story-btn-group">
-          <button class="story-toggle active" id="length-short" onclick="setStoryOpt('length','short')">Kort</button>
-          <button class="story-toggle" id="length-long" onclick="setStoryOpt('length','long')">Lång</button>
-        </div>
-      </div>
     </div>
-    <button class="story-generate-btn" id="story-generate-btn" onclick="generateStory()">Generera berättelse</button>
+    <button class="story-generate-btn" onclick="generateStory()">Generera</button>
     <div id="story-output"></div>
   </div>
 </div>
 
+<!-- Inställningar -->
 <div class="panel-overlay" id="settings-panel">
   <div class="panel-sheet">
-    <button class="panel-close" onclick="closeSettings()">✕</button>
+    <button class="panel-close" onclick="closePanel('settings-panel')">✕</button>
     <h2 class="serif">Inställningar</h2>
     <div class="form-group">
       <label>Namn</label>
@@ -272,339 +320,726 @@ canvas#moodChart { width: 100% !important; }
       <button class="data-btn" onclick="exportData()">📤 Exportera data</button>
       <button class="data-btn" onclick="document.getElementById('import-file').click()">📥 Importera data</button>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
-      <button class="data-btn" onclick="openHistory()">📋 Versionshistorik</button>
+      <button class="data-btn" onclick="closePanel('settings-panel'); openPanel('history-panel')">📋 Versionshistorik</button>
     </div>
   </div>
 </div>
 
+<!-- Versionshistorik -->
 <div class="panel-overlay" id="history-panel">
   <div class="panel-sheet">
-    <button class="panel-close" onclick="closeHistory()">✕</button>
+    <button class="panel-close" onclick="closePanel('history-panel')">✕</button>
     <h2 class="serif">Versionshistorik</h2>
     <div id="history-content"></div>
   </div>
 </div>
 
 <script>
-const VERSION = '0.3';
+const VERSION = '0.4';
 const EMOJI_MAP = {1:'😞',2:'😕',3:'😐',4:'🙂',5:'😊'};
 let selectedMood = null;
 let _logCache = null;
+let chartDots = []; // för klickbara prickar i grafen
 
-function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function nowTime() { const t=new Date(); return String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0'); }
-function todayKey() { const t=new Date(); return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0'); }
-function makeId() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+// ── Helpers ────────────────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function nowTime() {
+  const t = new Date();
+  return String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
+}
+function todayKey() {
+  const t = new Date();
+  return t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+}
+function dateKey(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function makeId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
+// ── Data ───────────────────────────────────────────────
 function getLog() {
   if (_logCache) return _logCache;
-  try { _logCache=JSON.parse(localStorage.getItem('hl_log')||'{}'); } catch { _logCache={}; }
+  try { _logCache = JSON.parse(localStorage.getItem('hl_log') || '{}'); } catch { _logCache = {}; }
   return _logCache;
 }
-function saveLog(log) { _logCache=log; localStorage.setItem('hl_log',JSON.stringify(log)); }
+function saveLog(log) {
+  _logCache = log;
+  localStorage.setItem('hl_log', JSON.stringify(log));
+}
 function getAllEntries() {
-  const log=getLog(), out=[];
-  Object.keys(log).sort().forEach(k=>{ const arr=Array.isArray(log[k])?log[k]:[log[k]]; arr.forEach(e=>out.push({key:k,...e})); });
+  const log = getLog(), out = [];
+  Object.keys(log).sort().forEach(k => {
+    const arr = Array.isArray(log[k]) ? log[k] : [log[k]];
+    arr.forEach(e => out.push({key: k, ...e}));
+  });
   return out;
 }
+function getEntriesForKey(key) {
+  const log = getLog();
+  return Array.isArray(log[key]) ? log[key] : (log[key] ? [log[key]] : []);
+}
 
+// ── Panel helpers ──────────────────────────────────────
+function openPanel(id) { document.getElementById(id).classList.add('open'); }
+function closePanel(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── Loggning ───────────────────────────────────────────
 function selectMood(val) {
-  selectedMood=val;
-  document.querySelectorAll('.mood-emoji-btn').forEach(b=>b.classList.toggle('selected',parseInt(b.dataset.val)===val));
+  selectedMood = val;
+  document.querySelectorAll('.mood-emoji-btn').forEach(b =>
+    b.classList.toggle('selected', parseInt(b.dataset.val) === val)
+  );
 }
 
 function saveMood() {
   if (!selectedMood) { alert('Välj ett humör först.'); return; }
-  const note=document.getElementById('mood-note').value.trim();
-  const time=document.getElementById('mood-time').value||nowTime();
-  const log=getLog(), key=todayKey();
-  if (!log[key]) log[key]=[];
-  else if (!Array.isArray(log[key])) log[key]=[log[key]];
-  log[key].push({id:makeId(),mood:selectedMood,note,time});
-  log[key].sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+  const note = document.getElementById('mood-note').value.trim();
+  const time = document.getElementById('mood-time').value || nowTime();
+  const key  = document.getElementById('mood-date').value || todayKey();
+  const log  = getLog();
+  if (!log[key]) log[key] = [];
+  else if (!Array.isArray(log[key])) log[key] = [log[key]];
+  log[key].push({id: makeId(), mood: selectedMood, note, time});
+  log[key].sort((a,b) => (a.time||'').localeCompare(b.time||''));
   saveLog(log);
-  selectedMood=null;
-  document.querySelectorAll('.mood-emoji-btn').forEach(b=>b.classList.remove('selected'));
-  document.getElementById('mood-note').value='';
-  document.getElementById('mood-time').value=nowTime();
-  const s=document.getElementById('mood-saved'); s.style.display='block';
-  setTimeout(()=>s.style.display='none',2000);
-  renderTodayLog(); updateStreak();
+  selectedMood = null;
+  document.querySelectorAll('.mood-emoji-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('mood-note').value = '';
+  document.getElementById('mood-time').value = nowTime();
+  const s = document.getElementById('mood-saved');
+  s.style.display = 'block';
+  setTimeout(() => s.style.display = 'none', 2000);
+  renderTodayLog();
+  updateStreak();
 }
 
 function renderTodayLog() {
-  const log=getLog(), key=todayKey();
-  const arr=Array.isArray(log[key])?log[key]:(log[key]?[log[key]]:[]);
-  const el=document.getElementById('today-log');
-  if (!arr.length) { el.innerHTML=''; return; }
-  el.innerHTML=[...arr].reverse().map(e=>'<div class="today-item"><span class="today-time">'+(e.time||'--:--')+'</span><span class="today-emoji">'+EMOJI_MAP[e.mood]+'</span><span>'+escHtml(e.note||'')+'</span></div>').join('');
+  const key = document.getElementById('mood-date')?.value || todayKey();
+  const arr = getEntriesForKey(key);
+  const el  = document.getElementById('today-log');
+  if (!arr.length) { el.innerHTML = ''; return; }
+  const reversed = [...arr].reverse();
+  const visible  = reversed.slice(0, 3);
+  const hidden   = reversed.length - visible.length;
+  el.innerHTML = visible.map(e =>
+    `<div class="today-item">
+      <span class="today-time">${e.time||'--:--'}</span>
+      <span class="today-emoji">${EMOJI_MAP[e.mood]}</span>
+      <span>${escHtml(e.note||'')}</span>
+    </div>`
+  ).join('') + (hidden > 0
+    ? `<button class="today-show-all" onclick="openPanel('diary-panel'); renderDiary()">Visa alla ${arr.length} loggningar →</button>`
+    : '');
 }
 
 function updateStreak() {
-  const log=getLog(); let streak=0, d=new Date();
-  for (let i=0;i<365;i++) {
-    const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    if (log[k]&&(Array.isArray(log[k])?log[k].length>0:true)) streak++;
-    else if (i>0) break;
-    d.setDate(d.getDate()-1);
+  const log = getLog();
+  let streak = 0;
+  const d = new Date();
+  for (let i = 0; i < 365; i++) {
+    const k = dateKey(d);
+    if (log[k] && (Array.isArray(log[k]) ? log[k].length > 0 : true)) streak++;
+    else if (i > 0) break;
+    d.setDate(d.getDate() - 1);
   }
-  document.getElementById('streak-count').textContent=streak+' dag'+(streak!==1?'ar':'');
-  const entries=getAllEntries(), cut=new Date(); cut.setDate(cut.getDate()-30);
-  const rec=entries.filter(e=>new Date(e.key)>=cut);
-  if (rec.length) { const a=(rec.reduce((s,e)=>s+e.mood,0)/rec.length).toFixed(1); document.getElementById('avg-mood').textContent=EMOJI_MAP[Math.round(parseFloat(a))]+' '+a; }
-  else document.getElementById('avg-mood').textContent='—';
-}
+  document.getElementById('streak-count').textContent = streak + ' d';
 
-function openDiary() {
-  const log=getLog(), keys=Object.keys(log).sort((a,b)=>b.localeCompare(a));
-  const el=document.getElementById('diary-content');
-  if (!keys.length) { el.innerHTML='<div class="diary-empty">Inga anteckningar ännu.<br>Börja logga idag!</div>'; document.getElementById('diary-panel').classList.add('open'); return; }
-  const weeks={};
-  keys.forEach(k=>{ const d=new Date(k),mon=new Date(d); mon.setDate(d.getDate()-((d.getDay()+6)%7)); const wk=mon.toISOString().slice(0,10); if(!weeks[wk])weeks[wk]=[]; const arr=Array.isArray(log[k])?log[k]:[log[k]]; arr.forEach(e=>weeks[wk].push({key:k,...e})); });
-  el.innerHTML=Object.keys(weeks).sort((a,b)=>b.localeCompare(a)).map(wk=>{
-    const m=new Date(wk),s=new Date(wk); s.setDate(m.getDate()+6);
-    const fmt=d=>d.toLocaleDateString('sv-SE',{day:'numeric',month:'short'});
-    const rows=weeks[wk].map(e=>{
-      const eid=e.id||(e.key+'_'+e.time);
-      const dn=new Date(e.key).toLocaleDateString('sv-SE',{weekday:'short',day:'numeric',month:'short'});
-      const sn=escHtml(e.note||'');
-      return '<div class="diary-entry" id="entry-'+eid+'"><div class="diary-meta"><span class="diary-date-text">'+dn+'</span><span class="diary-time-text">'+(e.time||'--:--')+'</span></div><div class="diary-emoji-big">'+EMOJI_MAP[e.mood]+'</div><div class="diary-right"><div class="diary-note-text" id="note-'+eid+'">'+(sn||'<span style="color:var(--muted);font-style:italic">Ingen anteckning</span>')+'</div><div class="diary-actions"><button class="diary-action-btn" onclick="editEntry(\''+eid+'\',\''+e.key+'\',\''+(e.id||'')+'\',\''+(e.time||'')+'\')">✏️ Redigera</button><button class="diary-action-btn" style="color:#8B3A2F" onclick="deleteEntry(\''+e.key+'\',\''+(e.id||'')+'\',\''+(e.time||'')+'\')">🗑️ Ta bort</button></div></div></div>';
-    }).join('');
-    return '<div class="diary-week"><div class="diary-week-label">'+fmt(m)+' – '+fmt(s)+'</div>'+rows+'</div>';
-  }).join('');
-  document.getElementById('diary-panel').classList.add('open');
-}
-function closeDiary() { document.getElementById('diary-panel').classList.remove('open'); }
-
-function editEntry(eid,key,id,time) {
-  const el=document.getElementById('note-'+eid); if(!el||el.querySelector('textarea'))return;
-  const cur=(el.textContent||'').trim(), val=cur==='Ingen anteckning'?'':cur;
-  el.innerHTML='<textarea class="diary-edit-area" id="edit-'+eid+'" rows="2">'+escHtml(val)+'</textarea><button class="diary-save-edit" onclick="saveEdit(\''+eid+'\',\''+key+'\',\''+id+'\',\''+time+'\')">✓ Spara</button>';
-  document.getElementById('edit-'+eid).focus();
-}
-function saveEdit(eid,key,id,time) {
-  const ta=document.getElementById('edit-'+eid); if(!ta)return;
-  const newNote=ta.value.trim(), log=getLog(); if(!log[key])return;
-  const arr=Array.isArray(log[key])?log[key]:[log[key]];
-  const e=id?arr.find(e=>e.id===id):arr.find(e=>(e.time||'')===time);
-  if(e){e.note=newNote;saveLog(log);}
-  openDiary();
-}
-function deleteEntry(key,id,time) {
-  if(!confirm('Är du säker på att du vill ta bort den här anteckningen?'))return;
-  const log=getLog(); if(!log[key])return;
-  let arr=Array.isArray(log[key])?log[key]:[log[key]];
-  arr=id?arr.filter(e=>e.id!==id):arr.filter(e=>(e.time||'')!==time);
-  if(!arr.length)delete log[key]; else log[key]=arr;
-  saveLog(log); openDiary(); renderTodayLog(); updateStreak();
-}
-
-function openChart() { document.getElementById('chart-panel').classList.add('open'); setTimeout(renderChart,150); }
-function closeChart() { document.getElementById('chart-panel').classList.remove('open'); }
-function renderChart() {
-  const entries=getAllEntries(),canvas=document.getElementById('moodChart'),ctx=canvas.getContext('2d');
-  const W=canvas.offsetWidth||300,H=220;
-  canvas.width=W*devicePixelRatio; canvas.height=H*devicePixelRatio; ctx.scale(devicePixelRatio,devicePixelRatio);
-  const pad={top:20,right:20,bottom:35,left:30},cw=W-pad.left-pad.right,ch=H-pad.top-pad.bottom;
-  ctx.clearRect(0,0,W,H);
-  if(!entries.length){ctx.fillStyle='#7A9AB5';ctx.font='13px Jost,sans-serif';ctx.textAlign='center';ctx.fillText('Ingen data ännu',W/2,H/2);return;}
-  const bw=cw/Math.max(entries.length,1);
-  for(let v=1;v<=5;v++){const y=pad.top+ch-((v-1)/4)*ch;ctx.strokeStyle='rgba(26,47,74,0.12)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cw,y);ctx.stroke();ctx.fillStyle='#7A9AB5';ctx.font='11px Jost,sans-serif';ctx.textAlign='right';ctx.fillText(EMOJI_MAP[v],pad.left-2,y+4);}
-  if(entries.length>1){ctx.beginPath();entries.forEach((e,i)=>{const x=pad.left+i*bw+bw/2,y=pad.top+ch-((e.mood-1)/4)*ch;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.lineTo(pad.left+(entries.length-1)*bw+bw/2,pad.top+ch);ctx.lineTo(pad.left+bw/2,pad.top+ch);ctx.closePath();ctx.fillStyle='rgba(26,47,74,0.08)';ctx.fill();ctx.strokeStyle='#1A2F4A';ctx.lineWidth=2;ctx.lineJoin='round';ctx.beginPath();entries.forEach((e,i)=>{const x=pad.left+i*bw+bw/2,y=pad.top+ch-((e.mood-1)/4)*ch;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();}
-  entries.forEach((e,i)=>{const x=pad.left+i*bw+bw/2,y=pad.top+ch-((e.mood-1)/4)*ch;ctx.fillStyle='#1A2F4A';ctx.beginPath();ctx.arc(x,y,3.5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#D6E8F5';ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.fill();});
-  ctx.fillStyle='#7A9AB5';ctx.font='9px Jost,sans-serif';ctx.textAlign='center';
-  entries.forEach((e,i)=>{if(i%Math.ceil(entries.length/6)===0){const d=new Date(e.key);ctx.fillText(d.toLocaleDateString('sv-SE',{day:'numeric',month:'short'}),pad.left+i*bw+bw/2,H-6);}});
-}
-
-function irow(icon,title,text){return '<div class="insight-row"><div class="insight-icon">'+icon+'</div><div class="insight-text"><strong>'+title+'</strong>'+text+'</div></div>';}
-function openInsights() {
-  const entries=getAllEntries(),el=document.getElementById('insights-content');
-  if(entries.length<5){el.innerHTML='<div class="insight-empty">Fortsätt logga — insikterna växer fram när det finns mer data. 📈</div>';document.getElementById('insights-panel').classList.add('open');return;}
-  const mn=arr=>arr.length?arr.reduce((s,v)=>s+v,0)/arr.length:null;
-  const mf=arr=>arr&&arr.length?mn(arr).toFixed(1):null;
-  const allM=entries.map(e=>e.mood);
-  const dayG={0:[],1:[],2:[],3:[],4:[],5:[],6:[]};
-  const dayN=['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
-  entries.forEach(e=>dayG[new Date(e.key).getDay()].push(e.mood));
-  const dRank=Object.keys(dayG).filter(d=>dayG[d].length>0).sort((a,b)=>mn(dayG[b])-mn(dayG[a]));
-  const bestDay=dRank[0],worstDay=dRank[dRank.length-1];
-  const wdM=[],weM=[];
-  entries.forEach(e=>{const d=new Date(e.key).getDay();(d===0||d===6?weM:wdM).push(e.mood);});
-  const hBuck={};
-  entries.forEach(e=>{const h=parseInt((e.time||'12:00').split(':')[0]);const b=Math.floor(h/3)*3;const l=String(b).padStart(2,'0')+'–'+String(b+3).padStart(2,'0');if(!hBuck[l])hBuck[l]=[];hBuck[l].push(e.mood);});
-  const hSort=Object.keys(hBuck).filter(k=>hBuck[k].length>1).sort((a,b)=>mn(hBuck[b])-mn(hBuck[a]));
-  const last7=entries.slice(-7).map(e=>e.mood),prev7=entries.slice(-14,-7).map(e=>e.mood);
-  const tV=(mf(last7)&&mf(prev7))?(parseFloat(mf(last7))-parseFloat(mf(prev7))).toFixed(1):null;
-  let lHigh=0,cHigh=0,lHK='';
-  entries.forEach(e=>{if(e.key!==lHK){lHK=e.key;if(e.mood>=4){cHigh++;lHigh=Math.max(lHigh,cHigh);}else cHigh=0;}});
-  const wkM={};
-  entries.forEach(e=>{const d=new Date(e.key),mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));const wk=mon.toISOString().slice(0,10);if(!wkM[wk])wkM[wk]=[];wkM[wk].push(e.mood);});
-  const wkK=Object.keys(wkM).filter(k=>wkM[k].length>=3);
-  const bestWk=wkK.length?[...wkK].sort((a,b)=>mn(wkM[b])-mn(wkM[a]))[0]:null;
-  const worstWk=wkK.length?[...wkK].sort((a,b)=>mn(wkM[a])-mn(wkM[b]))[0]:null;
-  const happiest=[...entries].sort((a,b)=>b.mood-a.mood||b.key.localeCompare(a.key))[0];
-  const logCnt={};entries.forEach(e=>{logCnt[e.key]=(logCnt[e.key]||0)+1;});
-  const manyM=[],fewM=[];const log=getLog();
-  Object.keys(logCnt).forEach(k=>{const arr=Array.isArray(log[k])?log[k]:[log[k]];arr.forEach(e=>(logCnt[k]>=3?manyM:fewM).push(e.mood));});
-  const m=mn(allM);
-  const std=m?Math.sqrt(allM.reduce((s,v)=>s+Math.pow(v-m,2),0)/allM.length).toFixed(1):null;
-  const gW={},bW={};
-  entries.forEach(e=>{if(!e.note)return;const ws=e.note.toLowerCase().split(/\s+/).filter(w=>w.length>3);if(e.mood>=4)ws.forEach(w=>{gW[w]=(gW[w]||0)+1;});else if(e.mood<=2)ws.forEach(w=>{bW[w]=(bW[w]||0)+1;});});
-  const topW=o=>Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([w])=>w).join(', ');
-  const topGood=topW(gW),topBad=topW(bW);
-  const fmtWk=wk=>new Date(wk).toLocaleDateString('sv-SE',{day:'numeric',month:'short'});
-  el.innerHTML=
-    '<div class="insight-block"><h3>📊 Översikt</h3>'+irow('📈','Totalt snitt',mf(allM)+' av 5 — '+entries.length+' loggningar.')+irow('🔥','Senaste 7 dagarna','Snitt '+(mf(last7)||'—')+' av 5.')+(tV?irow((parseFloat(tV)>0?'⬆️':'⬇️'),'Trend',(parseFloat(tV)>0?'Bättre':'Sämre')+' än föregående vecka ('+(parseFloat(tV)>0?'+':'')+tV+').'):'')+(lHigh>1?irow('🌟','Längsta glada period',lHigh+' dagar i rad med humör 🙂 eller bättre.'):'')+(std?irow('〰️','Konsistens','Standardavvikelse '+std+' — '+(parseFloat(std)<0.8?'du är ganska stabil i humöret':'ditt humör varierar en hel del')+'.'):'')+'</div>'+
-    '<div class="insight-block"><h3>🗓️ Mönster</h3>'+(bestDay!==undefined?irow('😊','Bästa dagen',dayN[bestDay]+' — snitt '+mf(dayG[bestDay])+' av 5.'):'')+(worstDay!==undefined&&worstDay!==bestDay?irow('😔','Tuffast dag',dayN[worstDay]+' — snitt '+mf(dayG[worstDay])+' av 5.'):'')+(weM.length&&wdM.length?irow('🏖️','Helg vs vardag','Helg '+mf(weM)+' · Vardag '+mf(wdM)+' — '+(mn(weM)>mn(wdM)?'du mår bättre på helger':'du mår faktiskt bättre på vardagar')+'.'):'')+(hSort[0]?irow('🕐','Bästa tid på dygnet',hSort[0]+' — snitt '+mf(hBuck[hSort[0]])+' av 5.'):'')+(manyM.length&&fewM.length?irow('📝','Loggar du mer när du mår bra?','Dagar med 3+ loggningar: snitt '+mf(manyM)+'. Färre loggningar: snitt '+mf(fewM)+'.'):'')+'</div>'+
-    '<div class="insight-block"><h3>📅 Höjdpunkter</h3>'+(bestWk?irow('🏆','Bästa veckan','Veckan från '+fmtWk(bestWk)+' — snitt '+mf(wkM[bestWk])+' av 5.'):'')+(worstWk&&worstWk!==bestWk?irow('🌧️','Tuffaste veckan','Veckan från '+fmtWk(worstWk)+' — snitt '+mf(wkM[worstWk])+' av 5.'):'')+(happiest?irow('✨','Gladaste stunden',new Date(happiest.key).toLocaleDateString('sv-SE',{weekday:'long',day:'numeric',month:'long'})+' kl '+(happiest.time||'--:--')+' — '+EMOJI_MAP[happiest.mood]+(happiest.note?' "'+escHtml(happiest.note)+'"':'')+'.'):'')+  '</div>'+
-    (topGood||topBad?'<div class="insight-block"><h3>💬 Ord i dina anteckningar</h3>'+(topGood?irow('😊','Ord på bra dagar',topGood):'')+(topBad?irow('😞','Ord på svåra dagar',topBad):'')+  '</div>':'');
-  document.getElementById('insights-panel').classList.add('open');
-}
-function closeInsights() { document.getElementById('insights-panel').classList.remove('open'); }
-
-// ── Berättelse (regelbaserad, ingen API) ───────────────
-const storyState={style:'warm',period:'week',length:'short'};
-function setStoryOpt(type,val) {
-  storyState[type]=val;
-  if(type==='style')['warm','analytical'].forEach(v=>document.getElementById('style-'+v).classList.toggle('active',v===val));
-  else if(type==='period'){['week','month','all','custom'].forEach(v=>document.getElementById('period-'+v).classList.toggle('active',v===val));document.getElementById('custom-date-row').style.display=val==='custom'?'block':'none';}
-  else if(type==='length')['short','long'].forEach(v=>document.getElementById('length-'+v).classList.toggle('active',v===val));
-}
-function openStory() {
-  const today=todayKey(); document.getElementById('story-date-to').value=today;
-  const wa=new Date(); wa.setDate(wa.getDate()-7);
-  document.getElementById('story-date-from').value=wa.getFullYear()+'-'+String(wa.getMonth()+1).padStart(2,'0')+'-'+String(wa.getDate()).padStart(2,'0');
-  document.getElementById('story-output').innerHTML='';
-  document.getElementById('story-panel').classList.add('open');
-}
-function closeStory() { document.getElementById('story-panel').classList.remove('open'); }
-function getStoryEntries() {
-  const all=getAllEntries();
-  if(storyState.period==='week'){const c=new Date();c.setDate(c.getDate()-7);return all.filter(e=>new Date(e.key)>=c);}
-  if(storyState.period==='month'){const c=new Date();c.setDate(c.getDate()-30);return all.filter(e=>new Date(e.key)>=c);}
-  if(storyState.period==='all')return all;
-  const from=document.getElementById('story-date-from').value,to=document.getElementById('story-date-to').value;
-  return all.filter(e=>e.key>=from&&e.key<=to);
-}
-function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
-function calcStats(entries) {
-  const moods=entries.map(e=>e.mood);
-  const avg=moods.reduce((a,b)=>a+b,0)/moods.length;
-  const byDay={};
-  entries.forEach(e=>{if(!byDay[e.key])byDay[e.key]=[];byDay[e.key].push(e.mood);});
-  const dayList=Object.entries(byDay).map(([d,m])=>({date:d,avg:m.reduce((a,b)=>a+b,0)/m.length})).sort((a,b)=>a.date.localeCompare(b.date));
-  const best=[...dayList].sort((a,b)=>b.avg-a.avg)[0];
-  const worst=[...dayList].sort((a,b)=>a.avg-b.avg)[0];
-  const half=Math.floor(entries.length/2);
-  const a1=entries.slice(0,half).map(e=>e.mood).reduce((a,b)=>a+b,0)/Math.max(half,1);
-  const a2=entries.slice(half).map(e=>e.mood).reduce((a,b)=>a+b,0)/Math.max(entries.length-half,1);
-  const trend=a2-a1;
-  const hours=entries.map(e=>parseInt((e.time||'12:00').split(':')[0]));
-  const mornings=hours.filter(h=>h>=6&&h<12).length;
-  const evenings=hours.filter(h=>h>=18).length;
-  const notes=entries.filter(e=>e.note&&e.note.trim()).map(e=>e.note.trim());
-  const variance=moods.map(m=>Math.pow(m-avg,2)).reduce((a,b)=>a+b,0)/moods.length;
-  return {avg,dayList,best,worst,trend,mornings,evenings,notes,stddev:Math.sqrt(variance),days:dayList.length};
-}
-function moodWord(avg){if(avg>=4.5)return'riktigt bra';if(avg>=3.8)return'ganska bra';if(avg>=3.0)return'okej';if(avg>=2.2)return'lite tyngre';return'rätt tungt';}
-function dayName(ds){if(!ds)return'';return['söndag','måndag','tisdag','onsdag','torsdag','fredag','lördag'][new Date(ds).getDay()];}
-function fmtD(ds){if(!ds)return'';const d=new Date(ds);return d.getDate()+'/'+(d.getMonth()+1);}
-function buildStory(entries,name,s) {
-  const kort=storyState.length==='short', p=[];
-  if(storyState.style==='warm'){
-    p.push(pick(['Låt oss titta på hur du har haft det, '+name+'.','Här är en bild av ditt mående den senaste tiden, '+name+'.','Det här är din period i Humörloggen, '+name+'.']));
-    p.push('Sammantaget har du haft det '+moodWord(s.avg)+' – snitthumöret landade på '+s.avg.toFixed(1)+' av 5 under de '+s.days+' dagarna du loggade.');
-    if(entries.length>=4){if(s.trend>0.3)p.push('Det märks att humöret har rört sig uppåt under perioden – du verkar ha lyft dig längs vägen.');else if(s.trend<-0.3)p.push('Perioden verkar ha börjat starkare och tappat lite fart mot slutet – humöret rör sig i vågor, det är helt normalt.');else p.push('Humöret har hållit sig rätt stabilt under perioden, utan några stora svängningar.');}
-    if(s.best&&s.worst&&s.best.date!==s.worst.date)p.push('Din bästa dag var '+dayName(s.best.date)+' den '+fmtD(s.best.date)+', och den tyngsta var '+dayName(s.worst.date)+' den '+fmtD(s.worst.date)+'.');
-    if(!kort){
-      if(s.mornings>s.evenings*1.5)p.push('Du loggar mest på morgnarna – du verkar vara någon som reflekterar tidigt på dagen.');
-      else if(s.evenings>s.mornings*1.5)p.push('Dina loggningar sker mest på kvällarna. Kanske är det just då du stannar upp och checkar in med dig själv.');
-      if(s.notes.length>0){p.push('Du har skrivit '+s.notes.length+' anteckning'+(s.notes.length!==1?'ar':'')+' under perioden – fint att du tar dig tid att sätta ord på hur du känner.');if(s.notes.length>=2)p.push('En av dina noteringar: "'+s.notes[Math.floor(Math.random()*s.notes.length)]+'".');}
-      if(s.stddev<0.6)p.push('Ditt humör har varit ovanligt jämnt under perioden – en stabilitet som är värd att lägga märke till.');
-      else if(s.stddev>1.2)p.push('Det har funnits ganska stora variationer – dagar med riktigt bra känsla varvas med tyngre stunder.');
-    }
-    p.push(pick(['Fortsätt logga – varje notering är ett sätt att vara snäll mot dig själv.','Att du tar dig tid att följa ditt mående är en fin vana.','Hoppas nästa period bjuder på fler ljusa stunder.']));
+  // Igår
+  const yest = new Date(); yest.setDate(yest.getDate() - 1);
+  const yestArr = getEntriesForKey(dateKey(yest));
+  if (yestArr.length) {
+    const avg = yestArr.reduce((s,e) => s+e.mood, 0) / yestArr.length;
+    document.getElementById('yesterday-mood').textContent = EMOJI_MAP[Math.round(avg)] + ' ' + avg.toFixed(1);
   } else {
-    p.push('Period: '+s.days+' dagar · '+entries.length+' loggningar · snitthumör '+s.avg.toFixed(2)+'/5.');
-    p.push('Variation: standardavvikelse '+s.stddev.toFixed(2)+' — '+(s.stddev<0.7?'låg':s.stddev>1.2?'hög':'måttlig')+' variation.');
-    if(s.best&&s.worst)p.push('Högst snitt: '+s.best.date+' ('+s.best.avg.toFixed(2)+'). Lägst snitt: '+s.worst.date+' ('+s.worst.avg.toFixed(2)+').');
-    if(entries.length>=4){const ts=s.trend>0.3?'uppåtgående (+'+s.trend.toFixed(2)+')':s.trend<-0.3?'nedåtgående ('+s.trend.toFixed(2)+')':'stabilt ('+(s.trend>=0?'+':'')+s.trend.toFixed(2)+')';p.push('Trend (första vs andra halvan): '+ts+'.');}
-    if(!kort){
-      p.push('Loggfrekvens: '+(entries.length/s.days).toFixed(1)+' loggningar/dag. Morgon: '+s.mornings+'. Kväll: '+s.evenings+'.');
-      p.push('Anteckningar: '+s.notes.length+' st ('+(entries.length?((s.notes.length/entries.length)*100).toFixed(0):0)+'% av loggningarna).');
-      if(s.notes.length>0)p.push('Exempelanteckning: "'+s.notes[0]+'".');
-    }
+    document.getElementById('yesterday-mood').textContent = '—';
   }
+
+  // Snitt 30 dagar
+  const entries = getAllEntries();
+  const cut30 = new Date(); cut30.setDate(cut30.getDate() - 30);
+  const rec30 = entries.filter(e => new Date(e.key) >= cut30);
+  if (rec30.length) {
+    const a = (rec30.reduce((s,e) => s+e.mood, 0) / rec30.length).toFixed(1);
+    document.getElementById('avg-mood').textContent = EMOJI_MAP[Math.round(parseFloat(a))] + ' ' + a;
+  } else {
+    document.getElementById('avg-mood').textContent = '—';
+  }
+
+  // Totalt snitt
+  if (entries.length) {
+    const a = (entries.reduce((s,e) => s+e.mood, 0) / entries.length).toFixed(1);
+    document.getElementById('total-avg').textContent = EMOJI_MAP[Math.round(parseFloat(a))] + ' ' + a;
+  } else {
+    document.getElementById('total-avg').textContent = '—';
+  }
+}
+
+// ── Dagbok ─────────────────────────────────────────────
+function diaryEntryHTML(e) {
+  // Använd data-attribut istället för interpolerade strängar i onclick – säkrare mot citattecken
+  const eid = e.id || (e.key + '_' + e.time);
+  const dn  = new Date(e.key).toLocaleDateString('sv-SE', {weekday:'short', day:'numeric', month:'short'});
+  const note = e.note
+    ? `<div class="diary-note-text" id="note-${eid}">${escHtml(e.note)}</div>`
+    : `<div class="diary-note-text" id="note-${eid}"><span style="color:var(--muted);font-style:italic">Ingen anteckning</span></div>`;
+  return `
+    <div class="diary-entry" id="entry-${eid}"
+         data-key="${escHtml(e.key)}" data-id="${escHtml(e.id||'')}" data-time="${escHtml(e.time||'')}">
+      <div class="diary-meta">
+        <span class="diary-date-text">${dn}</span>
+        <span class="diary-time-text">${e.time||'--:--'}</span>
+      </div>
+      <div class="diary-emoji-big">${EMOJI_MAP[e.mood]}</div>
+      <div class="diary-right">
+        ${note}
+        <div class="diary-actions">
+          <button class="diary-action-btn" onclick="editEntry('${eid}')">✏️ Redigera</button>
+          <button class="diary-action-btn" style="color:#8B3A2F" onclick="deleteEntry('${eid}')">🗑️ Ta bort</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderDiary() {
+  const log  = getLog();
+  const keys = Object.keys(log).sort((a,b) => b.localeCompare(a));
+  const el   = document.getElementById('diary-content');
+  if (!keys.length) {
+    el.innerHTML = '<div class="diary-empty">Inga anteckningar ännu.<br>Börja logga idag!</div>';
+    return;
+  }
+  // Gruppera per vecka
+  const weeks = {};
+  keys.forEach(k => {
+    const d = new Date(k), mon = new Date(d);
+    mon.setDate(d.getDate() - ((d.getDay()+6)%7));
+    const wk = dateKey(mon);
+    if (!weeks[wk]) weeks[wk] = [];
+    getEntriesForKey(k).forEach(e => weeks[wk].push({key: k, ...e}));
+  });
+  const fmt = d => d.toLocaleDateString('sv-SE', {day:'numeric', month:'short'});
+  el.innerHTML = Object.keys(weeks).sort((a,b) => b.localeCompare(a)).map(wk => {
+    const m = new Date(wk), s = new Date(wk); s.setDate(m.getDate()+6);
+    return `<div class="diary-week">
+      <div class="diary-week-label">${fmt(m)} – ${fmt(s)}</div>
+      ${weeks[wk].map(diaryEntryHTML).join('')}
+    </div>`;
+  }).join('');
+}
+
+function editEntry(eid) {
+  const noteEl = document.getElementById('note-' + eid);
+  if (!noteEl || noteEl.querySelector('textarea')) return;
+  const cur = noteEl.innerText.trim();
+  const val = cur === 'Ingen anteckning' ? '' : cur;
+  noteEl.innerHTML = `<textarea class="diary-edit-area" rows="2">${escHtml(val)}</textarea>
+    <button class="diary-save-edit" onclick="saveEdit('${eid}')">✓ Spara</button>`;
+  noteEl.querySelector('textarea').focus();
+}
+
+function saveEdit(eid) {
+  const entryEl = document.getElementById('entry-' + eid);
+  if (!entryEl) return;
+  const key  = entryEl.dataset.key;
+  const id   = entryEl.dataset.id;
+  const time = entryEl.dataset.time;
+  const ta   = document.getElementById('note-' + eid)?.querySelector('textarea');
+  if (!ta) return;
+  const newNote = ta.value.trim();
+  const log = getLog();
+  if (!log[key]) return;
+  const arr = Array.isArray(log[key]) ? log[key] : [log[key]];
+  const e = id ? arr.find(e => e.id === id) : arr.find(e => (e.time||'') === time);
+  if (e) { e.note = newNote; saveLog(log); }
+  renderDiary();
+}
+
+function deleteEntry(eid) {
+  if (!confirm('Ta bort den här anteckningen?')) return;
+  const entryEl = document.getElementById('entry-' + eid);
+  if (!entryEl) return;
+  const key  = entryEl.dataset.key;
+  const id   = entryEl.dataset.id;
+  const time = entryEl.dataset.time;
+  const log  = getLog();
+  if (!log[key]) return;
+  let arr = Array.isArray(log[key]) ? log[key] : [log[key]];
+  arr = id ? arr.filter(e => e.id !== id) : arr.filter(e => (e.time||'') !== time);
+  if (!arr.length) delete log[key]; else log[key] = arr;
+  saveLog(log);
+  renderDiary();
+  renderTodayLog();
+  updateStreak();
+}
+
+// ── Graf ───────────────────────────────────────────────
+function renderChart() {
+  const entries = getAllEntries();
+  const canvas  = document.getElementById('moodChart');
+  const ctx     = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 300, H = 220;
+  canvas.width  = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const pad = {top:20, right:20, bottom:35, left:30};
+  const cw = W - pad.left - pad.right, ch = H - pad.top - pad.bottom;
+  ctx.clearRect(0, 0, W, H);
+  chartDots = [];
+
+  if (!entries.length) {
+    ctx.fillStyle = '#7A9AB5'; ctx.font = '13px Jost,sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('Ingen data ännu', W/2, H/2);
+    return;
+  }
+  const bw = cw / Math.max(entries.length, 1);
+
+  // Grid
+  for (let v = 1; v <= 5; v++) {
+    const y = pad.top + ch - ((v-1)/4)*ch;
+    ctx.strokeStyle = 'rgba(26,47,74,0.12)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left+cw, y); ctx.stroke();
+    ctx.fillStyle = '#7A9AB5'; ctx.font = '11px Jost,sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText(EMOJI_MAP[v], pad.left-2, y+4);
+  }
+
+  // Area fill
+  if (entries.length > 1) {
+    ctx.beginPath();
+    entries.forEach((e, i) => {
+      const x = pad.left + i*bw + bw/2, y = pad.top + ch - ((e.mood-1)/4)*ch;
+      i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    });
+    ctx.lineTo(pad.left + (entries.length-1)*bw + bw/2, pad.top+ch);
+    ctx.lineTo(pad.left + bw/2, pad.top+ch);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(26,47,74,0.08)'; ctx.fill();
+    ctx.strokeStyle = '#1A2F4A'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    entries.forEach((e, i) => {
+      const x = pad.left + i*bw + bw/2, y = pad.top + ch - ((e.mood-1)/4)*ch;
+      i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  }
+
+  // Prickar – spara koordinater för klick
+  entries.forEach((e, i) => {
+    const x = pad.left + i*bw + bw/2, y = pad.top + ch - ((e.mood-1)/4)*ch;
+    ctx.fillStyle = '#1A2F4A'; ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#D6E8F5'; ctx.beginPath(); ctx.arc(x, y, 1.5, 0, Math.PI*2); ctx.fill();
+    chartDots.push({x, y, entry: e});
+  });
+
+  // X-axel datum
+  ctx.fillStyle = '#7A9AB5'; ctx.font = '9px Jost,sans-serif'; ctx.textAlign = 'center';
+  entries.forEach((e, i) => {
+    if (i % Math.ceil(entries.length/6) === 0) {
+      const d = new Date(e.key);
+      ctx.fillText(d.toLocaleDateString('sv-SE', {day:'numeric', month:'short'}), pad.left+i*bw+bw/2, H-6);
+    }
+  });
+
+  // Klick/touch på graf
+  canvas.onclick = (ev) => handleChartClick(ev, canvas);
+  canvas.ontouchend = (ev) => { ev.preventDefault(); handleChartClick(ev.changedTouches[0], canvas); };
+}
+
+function handleChartClick(ev, canvas) {
+  const rect   = canvas.getBoundingClientRect();
+  const mx     = ev.clientX - rect.left;
+  const my     = ev.clientY - rect.top;
+  const tooltip = document.getElementById('chart-tooltip');
+  let closest = null, minDist = 30;
+  chartDots.forEach(dot => {
+    const dist = Math.hypot(dot.x - mx, dot.y - my);
+    if (dist < minDist) { minDist = dist; closest = dot; }
+  });
+  if (!closest) { tooltip.style.display = 'none'; return; }
+  const e   = closest.entry;
+  const dn  = new Date(e.key).toLocaleDateString('sv-SE', {weekday:'long', day:'numeric', month:'long'});
+  const dayEntries = getEntriesForKey(e.key);
+  const notes = dayEntries.filter(x => x.note).map(x => `"${escHtml(x.note)}"`).join('<br>');
+  const avg   = (dayEntries.reduce((s,x) => s+x.mood, 0) / dayEntries.length).toFixed(1);
+  tooltip.innerHTML = `<strong>${dn}</strong><br>Snitt: ${EMOJI_MAP[Math.round(parseFloat(avg))]} ${avg}` + (notes ? `<br>${notes}` : '');
+  tooltip.style.display = 'block';
+  tooltip.style.left = Math.min(closest.x, canvas.offsetWidth - 210) + 'px';
+  tooltip.style.top  = (closest.y - tooltip.offsetHeight - 10) + 'px';
+}
+
+// ── Insikter ───────────────────────────────────────────
+function irow(icon, title, text) {
+  return `<div class="insight-row">
+    <div class="insight-icon">${icon}</div>
+    <div class="insight-text"><strong>${title}</strong>${text}</div>
+  </div>`;
+}
+
+function renderInsights() {
+  const entries = getAllEntries();
+  const el      = document.getElementById('insights-content');
+  if (entries.length < 5) {
+    el.innerHTML = '<div class="insight-empty">Fortsätt logga — insikterna växer fram när det finns mer data. 📈</div>';
+    return;
+  }
+  const mn  = arr => arr.length ? arr.reduce((s,v) => s+v, 0) / arr.length : null;
+  const mf  = arr => arr && arr.length ? mn(arr).toFixed(1) : null;
+  const allM = entries.map(e => e.mood);
+  const dayG = {0:[],1:[],2:[],3:[],4:[],5:[],6:[]};
+  const dayN = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
+  entries.forEach(e => dayG[new Date(e.key).getDay()].push(e.mood));
+  const dRank   = Object.keys(dayG).filter(d => dayG[d].length > 0).sort((a,b) => mn(dayG[b]) - mn(dayG[a]));
+  const bestDay = dRank[0], worstDay = dRank[dRank.length-1];
+  const wdM = [], weM = [];
+  entries.forEach(e => { const d = new Date(e.key).getDay(); (d===0||d===6 ? weM : wdM).push(e.mood); });
+  const hBuck = {};
+  entries.forEach(e => {
+    const h = parseInt((e.time||'12:00').split(':')[0]);
+    const b = Math.floor(h/3)*3;
+    const l = String(b).padStart(2,'0') + '–' + String(b+3).padStart(2,'0');
+    if (!hBuck[l]) hBuck[l] = [];
+    hBuck[l].push(e.mood);
+  });
+  const hSort = Object.keys(hBuck).filter(k => hBuck[k].length > 1).sort((a,b) => mn(hBuck[b]) - mn(hBuck[a]));
+  const last7 = entries.slice(-7).map(e => e.mood), prev7 = entries.slice(-14,-7).map(e => e.mood);
+  const tV = (mf(last7) && mf(prev7)) ? (parseFloat(mf(last7)) - parseFloat(mf(prev7))).toFixed(1) : null;
+  let lHigh = 0, cHigh = 0, lHK = '';
+  entries.forEach(e => {
+    if (e.key !== lHK) { lHK = e.key; if (e.mood >= 4) { cHigh++; lHigh = Math.max(lHigh, cHigh); } else cHigh = 0; }
+  });
+  const wkM = {};
+  entries.forEach(e => {
+    const d = new Date(e.key), mon = new Date(d);
+    mon.setDate(d.getDate() - ((d.getDay()+6)%7));
+    const wk = dateKey(mon);
+    if (!wkM[wk]) wkM[wk] = [];
+    wkM[wk].push(e.mood);
+  });
+  const wkK    = Object.keys(wkM).filter(k => wkM[k].length >= 3);
+  const bestWk = wkK.length ? [...wkK].sort((a,b) => mn(wkM[b]) - mn(wkM[a]))[0] : null;
+  const worstWk = wkK.length ? [...wkK].sort((a,b) => mn(wkM[a]) - mn(wkM[b]))[0] : null;
+  const happiest = [...entries].sort((a,b) => b.mood - a.mood || b.key.localeCompare(a.key))[0];
+  const logCnt = {};
+  entries.forEach(e => { logCnt[e.key] = (logCnt[e.key]||0) + 1; });
+  const manyM = [], fewM = [];
+  const log = getLog();
+  Object.keys(logCnt).forEach(k => {
+    const arr = Array.isArray(log[k]) ? log[k] : [log[k]];
+    arr.forEach(e => (logCnt[k] >= 3 ? manyM : fewM).push(e.mood));
+  });
+  const m   = mn(allM);
+  const std = m ? Math.sqrt(allM.reduce((s,v) => s + Math.pow(v-m,2), 0) / allM.length).toFixed(1) : null;
+  const gW  = {}, bW = {};
+  entries.forEach(e => {
+    if (!e.note) return;
+    const ws = e.note.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+    if (e.mood >= 4) ws.forEach(w => { gW[w] = (gW[w]||0)+1; });
+    else if (e.mood <= 2) ws.forEach(w => { bW[w] = (bW[w]||0)+1; });
+  });
+  const topW    = o => Object.entries(o).sort((a,b) => b[1]-a[1]).slice(0,4).map(([w]) => w).join(', ');
+  const topGood = topW(gW), topBad = topW(bW);
+  const fmtWk   = wk => new Date(wk).toLocaleDateString('sv-SE', {day:'numeric', month:'short'});
+
+  el.innerHTML =
+    `<div class="insight-block"><h3>📊 Översikt</h3>
+      ${irow('📈','Totalt snitt', mf(allM)+' av 5 — '+entries.length+' loggningar.')}
+      ${irow('🔥','Senaste 7 dagarna','Snitt '+(mf(last7)||'—')+' av 5.')}
+      ${tV ? irow(parseFloat(tV)>0?'⬆️':'⬇️','Trend',(parseFloat(tV)>0?'Bättre':'Sämre')+' än föregående vecka ('+(parseFloat(tV)>0?'+':'')+tV+').') : ''}
+      ${lHigh>1 ? irow('🌟','Längsta glada period',lHigh+' dagar i rad med humör 🙂 eller bättre.') : ''}
+      ${std ? irow('〰️','Konsistens','Standardavvikelse '+std+' — '+(parseFloat(std)<0.8?'du är ganska stabil i humöret':'ditt humör varierar en hel del')+'.') : ''}
+    </div>
+    <div class="insight-block"><h3>🗓️ Mönster</h3>
+      ${bestDay!==undefined ? irow('😊','Bästa dagen',dayN[bestDay]+' — snitt '+mf(dayG[bestDay])+' av 5.') : ''}
+      ${worstDay!==undefined&&worstDay!==bestDay ? irow('😔','Tuffast dag',dayN[worstDay]+' — snitt '+mf(dayG[worstDay])+' av 5.') : ''}
+      ${weM.length&&wdM.length ? irow('🏖️','Helg vs vardag','Helg '+mf(weM)+' · Vardag '+mf(wdM)+' — '+(mn(weM)>mn(wdM)?'du mår bättre på helger':'du mår faktiskt bättre på vardagar')+'.') : ''}
+      ${hSort[0] ? irow('🕐','Bästa tid på dygnet',hSort[0]+' — snitt '+mf(hBuck[hSort[0]])+' av 5.') : ''}
+      ${manyM.length&&fewM.length ? irow('📝','Loggar du mer när du mår bra?','Dagar med 3+ loggningar: snitt '+mf(manyM)+'. Färre loggningar: snitt '+mf(fewM)+'.') : ''}
+    </div>
+    <div class="insight-block"><h3>📅 Höjdpunkter</h3>
+      ${bestWk ? irow('🏆','Bästa veckan','Veckan från '+fmtWk(bestWk)+' — snitt '+mf(wkM[bestWk])+' av 5.') : ''}
+      ${worstWk&&worstWk!==bestWk ? irow('🌧️','Tuffaste veckan','Veckan från '+fmtWk(worstWk)+' — snitt '+mf(wkM[worstWk])+' av 5.') : ''}
+      ${happiest ? irow('✨','Gladaste stunden',new Date(happiest.key).toLocaleDateString('sv-SE',{weekday:'long',day:'numeric',month:'long'})+' kl '+(happiest.time||'--:--')+' — '+EMOJI_MAP[happiest.mood]+(happiest.note?' "'+escHtml(happiest.note)+'"':'')+'.') : ''}
+    </div>
+    ${topGood||topBad ? `<div class="insight-block"><h3>💬 Ord i dina anteckningar</h3>
+      ${topGood ? irow('😊','Ord på bra dagar',topGood) : ''}
+      ${topBad ? irow('😞','Ord på svåra dagar',topBad) : ''}
+    </div>` : ''}`;
+}
+
+// ── Berättelse ─────────────────────────────────────────
+const storyState = {type: 'story', period: 'week'};
+
+function setStoryOpt(key, val) {
+  storyState[key] = val;
+  if (key === 'type') {
+    ['story','analysis'].forEach(v => document.getElementById('type-'+v).classList.toggle('active', v===val));
+  } else if (key === 'period') {
+    ['week','month','all','custom'].forEach(v => document.getElementById('period-'+v).classList.toggle('active', v===val));
+    document.getElementById('custom-date-row').style.display = val==='custom' ? 'block' : 'none';
+  }
+}
+
+function initStory() {
+  const today = todayKey();
+  document.getElementById('story-date-to').value = today;
+  const wa = new Date(); wa.setDate(wa.getDate()-7);
+  document.getElementById('story-date-from').value = dateKey(wa);
+  document.getElementById('story-output').innerHTML = '';
+}
+
+function getStoryEntries() {
+  const all = getAllEntries();
+  if (storyState.period === 'week')  { const c = new Date(); c.setDate(c.getDate()-7);  return all.filter(e => new Date(e.key) >= c); }
+  if (storyState.period === 'month') { const c = new Date(); c.setDate(c.getDate()-30); return all.filter(e => new Date(e.key) >= c); }
+  if (storyState.period === 'all')   return all;
+  const from = document.getElementById('story-date-from').value;
+  const to   = document.getElementById('story-date-to').value;
+  return all.filter(e => e.key >= from && e.key <= to);
+}
+
+function calcStoryStats(entries) {
+  const moods = entries.map(e => e.mood);
+  const avg   = moods.reduce((a,b) => a+b, 0) / moods.length;
+  const byDay = {};
+  entries.forEach(e => { if (!byDay[e.key]) byDay[e.key]=[]; byDay[e.key].push(e.mood); });
+  const dayList = Object.entries(byDay).map(([d,m]) => ({date:d, avg:m.reduce((a,b)=>a+b,0)/m.length})).sort((a,b)=>a.date.localeCompare(b.date));
+  const best  = [...dayList].sort((a,b) => b.avg-a.avg)[0];
+  const worst = [...dayList].sort((a,b) => a.avg-b.avg)[0];
+  const half  = Math.floor(entries.length/2);
+  const a1    = entries.slice(0,half).map(e=>e.mood).reduce((a,b)=>a+b,0) / Math.max(half,1);
+  const a2    = entries.slice(half).map(e=>e.mood).reduce((a,b)=>a+b,0)   / Math.max(entries.length-half,1);
+  const trend = a2 - a1;
+  const hours = entries.map(e => parseInt((e.time||'12:00').split(':')[0]));
+  const mornings = hours.filter(h => h>=6&&h<12).length;
+  const evenings = hours.filter(h => h>=18).length;
+  const notes    = entries.filter(e => e.note&&e.note.trim()).map(e => e.note.trim());
+  const variance = moods.map(m => Math.pow(m-avg,2)).reduce((a,b)=>a+b,0) / moods.length;
+  return {avg, dayList, best, worst, trend, mornings, evenings, notes, stddev: Math.sqrt(variance), days: dayList.length, total: entries.length};
+}
+
+function dayName(ds) {
+  return ['söndag','måndag','tisdag','onsdag','torsdag','fredag','lördag'][new Date(ds).getDay()];
+}
+function fmtD(ds) {
+  const d = new Date(ds); return d.getDate()+'/'+(d.getMonth()+1);
+}
+function moodLandscape(avg) {
+  if (avg >= 4.5) return pick(['ett strålande landskap av solbelysta dagar','en period av sällsynt klarhet och ljus','dagar som smakade av sommaren även när det var grått']);
+  if (avg >= 3.8) return pick(['ett ganska ljust kapitel','en hygglig passage med mer sol än skugga','dagar som höll sig på den ljusa sidan av neutralt']);
+  if (avg >= 3.0) return pick(['ett neutralt landskap med omväxlande molnighet','dagar som varken lyste eller mörnade – de bara var','en period i det grå mellanregistret, inte dåligt, inte bra']);
+  if (avg >= 2.2) return pick(['ett landskap med övervägande mulet','dagar som vägde lite tungt','en period som krävde lite mer av dig än vanligt']);
+  return pick(['ett stormigt kapitel','dagar som satte motstånd','en period som inte gav dig mycket utan tog lite mer']);
+}
+function trendSentence(trend, name) {
+  if (trend > 0.5)  return pick([`Det är tydligt att ${name} tog sig uppåt längs vägen – perioden slutade starkare än den började.`, `En uppåtgående rörelse skymtar i datan. Något hände. Något lättade.`, `Kurvan pekar uppåt. Mot slutet av perioden var luften lättare att andas.`]);
+  if (trend < -0.5) return pick([`Perioden hade fart i början men tappade höjd mot slutet.`, `Något tyngre lade sig mot periodens slut – kanske utmattning, kanske omständigheter. Kanske bara väder.`, `En svagt nedåtgående rörelse. Inget dramatiskt – men noterbart.`]);
+  return pick([`Humöret höll sig remarkabelt stabilt, som en horisont utan alltför dramatiska toppar och dalar.`, `Konsistens är sin egen form av styrka. Perioden rullade på utan stora svängningar.`, `Varken uppgång eller nedgång – en period av jämn, hanterbar vardag.`]);
+}
+function bestWorstSentence(s) {
+  if (!s.best || !s.worst || s.best.date === s.worst.date) return '';
+  const bname = dayName(s.best.date)+' den '+fmtD(s.best.date);
+  const wname = dayName(s.worst.date)+' den '+fmtD(s.worst.date);
+  return pick([
+    `Ljuspunkten hette ${bname}. Mörkrets lågvattenmärke ägde rum ${wname}.`,
+    `${bname} stack ut som periodens bästa dag. ${wname} föredrog man att blunda för.`,
+    `Det händer saker i en period. ${bname} var en av de bättre. ${wname} – ja, den fick man bära.`
+  ]);
+}
+function noteSentence(s) {
+  if (!s.notes.length) return '';
+  const note = s.notes[Math.floor(Math.random() * s.notes.length)];
+  return pick([
+    `Bland anteckningarna dyker detta upp: "${escHtml(note)}" – ett litet fönster in i hur det faktiskt kändes.`,
+    `En av ${s.notes.length} anteckningar lyder: "${escHtml(note)}". Ord, nedskrivna i stunden.`,
+    `Du tog dig tid att skriva: "${escHtml(note)}". Sådant är värt att spara.`
+  ]);
+}
+function timeSentence(s) {
+  if (s.mornings > s.evenings * 1.5) return pick(['Loggningarna sker mestadels på morgnarna – du är tydligen en person som checkar in med sig själv innan dagen tar fart.', 'Morgonen är din tid för reflektion, om man ska tro loggarna.']);
+  if (s.evenings > s.mornings * 1.5) return pick(['Kvällarna dominerar loggningarna. Det är då du stannar upp, andas ut och frågar dig hur det egentligen gick.', 'Du är en kväll-reflekterare. Dagen hinner först vara, sedan tänker du på den.']);
+  return '';
+}
+function closingSentence() {
+  return pick([
+    'Varje loggning är ett litet ögonblick av ärlighet mot sig själv. Det är inte lite.',
+    'Att följa sig själv kräver mod. Fortsätt.',
+    'Humöret rör sig. Det är tecken på liv.',
+    'Nästa period väntar. Den vet ännu ingenting om sig själv.'
+  ]);
+}
+
+function buildStoryNarrative(entries, name, s) {
+  const p = [];
+  p.push(pick([
+    `Det var ${moodLandscape(s.avg)}.`,
+    `${name}s period i Humörloggen – ${s.days} dagar, ${s.total} loggningar – gestaltar ${moodLandscape(s.avg)}.`,
+    `Låt oss kalla det vad det var: ${moodLandscape(s.avg)}.`
+  ]));
+  p.push(`Snittet landade på ${s.avg.toFixed(1)} av 5. ${s.total} loggningar under ${s.days} dagar. ` +
+    pick(['Varje siffra är en stämning, varje stämning är ett liv.', 'Siffror, ja – men bakom dem en människa som faktiskt stannade upp och noterade.', 'Inte imponerande statistik. Imponerande ärlighet.']));
+  if (entries.length >= 4) p.push(trendSentence(s.trend, name));
+  const bw = bestWorstSentence(s);
+  if (bw) p.push(bw);
+  const ts = timeSentence(s);
+  if (ts) p.push(ts);
+  const ns = noteSentence(s);
+  if (ns) p.push(ns);
+  if (s.stddev < 0.6) p.push(pick(['Standardavvikelsen är låg. Humöret rör sig inom snäva marginaler. Det kan vara stabilitet – eller det kan vara något som väntar på att hända.', 'En ovanligt stabil period. Havet låg som en spegel.']));
+  else if (s.stddev > 1.2) p.push(pick(['Det har svängt. Högt och lågt inom samma period. Det är inte nödvändigtvis dåligt – det är nödvändigtvis mänskligt.', 'Variationen är stor. Dagar av ljus varvade med tyngre stunder. En rik, om än krävande, period.']));
+  p.push(closingSentence());
   return p.join('\n\n');
 }
+
+function buildAnalysis(entries, name, s) {
+  const loggFreq = (s.total / s.days).toFixed(2);
+  const trendDir = s.trend > 0.3 ? 'UPPÅTGÅENDE' : s.trend < -0.3 ? 'NEDÅTGÅENDE' : 'LATERAL';
+  const stability = s.stddev < 0.7 ? 'ACCEPTABEL' : s.stddev > 1.2 ? 'KRITISK' : 'MÅTTLIG';
+  const noteRate = s.total ? ((s.notes.length / s.total)*100).toFixed(0) : 0;
+
+  const lines = [];
+  lines.push(`HUMÖRANALYS v${VERSION} — ENHET: ${name.toUpperCase()}`);
+  lines.push(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+  lines.push(`PERIOD: ${s.days} dagar · DATAPUNKTER: ${s.total} · FREKVENS: ${loggFreq}/dag`);
+  lines.push(`HUMÖRKOEFFICIENT: ${s.avg.toFixed(3)}/5.000`);
+  lines.push(`AVVIKELSE FRÅN OPTIMAL (5.0): ${(5-s.avg).toFixed(3)} enheter`);
+  lines.push(`STABILITETSNIVÅ: ${stability} (σ=${s.stddev.toFixed(2)})`);
+  lines.push(`TREND: ${trendDir} (Δ=${s.trend>=0?'+':''}${s.trend.toFixed(3)})`);
+  lines.push(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+  if (s.best && s.worst) {
+    lines.push(`TOPPDAG: ${s.best.date} (koeff. ${s.best.avg.toFixed(2)})`);
+    lines.push(`BOTTENDAG: ${s.worst.date} (koeff. ${s.worst.avg.toFixed(2)})`);
+  }
+  lines.push(`ANTECKNINGSFREKVENS: ${noteRate}%`);
+  if (s.mornings > s.evenings * 1.5) lines.push(`LOGGNINGSPROFIL: MORGONORIENTERAD`);
+  else if (s.evenings > s.mornings * 1.5) lines.push(`LOGGNINGSPROFIL: KVÄLLSORIENTERAD`);
+  else lines.push(`LOGGNINGSPROFIL: OREGELBUNDEN`);
+  lines.push(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+  lines.push(`REKOMMENDATIONER:`);
+  if (s.avg < 3.0) lines.push(`→ Humörkoefficient under acceptabel tröskel. Åtgärd rekommenderas. Trolig orsak: mänsklig faktor.`);
+  else if (s.avg >= 4.0) lines.push(`→ Koefficient inom övre normalintervall. Fortsätt vara denna enhet.`);
+  else lines.push(`→ Koefficient inom neutralzon. Potential för optimering identifierad.`);
+  if (s.trend < -0.3) lines.push(`→ Nedåtgående trend detekterad. Utred externa variabler. Förslag: fönster med utsikt.`);
+  if (s.trend > 0.3)  lines.push(`→ Positiv trend bekräftad. Replikera beteende från periodens andra hälft.`);
+  if (parseFloat(loggFreq) < 1.0) lines.push(`→ Loggfrekvens under 1.0/dag. Biologisk enhet uppmanas att existera mer dokumenterat.`);
+  if (s.stddev > 1.2) lines.push(`→ Instabilt humörläge. Utred externa variabler. Minska antalet vardagar.`);
+  lines.push(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+  lines.push(`SLUTSATS: ${name.toUpperCase()} FORTSÄTTER EXISTERA. NÄSTA ANALYS REKOMMENDERAS OM 7 DAGAR.`);
+  return lines.join('\n');
+}
+
 function generateStory() {
-  const entries=getStoryEntries(),outEl=document.getElementById('story-output');
-  if(!entries.length){outEl.innerHTML='<div class="story-output">Inga loggningar hittades för den valda perioden.</div>';return;}
-  const name=localStorage.getItem('hl_name')||'du';
-  const stats=calcStats(entries);
-  const text=buildStory(entries,name,stats);
-  outEl.innerHTML='<div class="story-output">'+text.replace(/\n\n/g,'<br><br>')+'</div>';
+  const entries = getStoryEntries();
+  const outEl   = document.getElementById('story-output');
+  if (!entries.length) {
+    outEl.innerHTML = '<div class="story-output">Inga loggningar hittades för den valda perioden.</div>';
+    return;
+  }
+  const name  = localStorage.getItem('hl_name') || 'du';
+  const stats = calcStoryStats(entries);
+  if (storyState.type === 'analysis') {
+    const text = buildAnalysis(entries, name, stats);
+    outEl.innerHTML = `<div class="story-output analytical">${text.replace(/\n/g,'<br>')}</div>`;
+  } else {
+    const text = buildStoryNarrative(entries, name, stats);
+    outEl.innerHTML = `<div class="story-output">${text.replace(/\n\n/g,'<br><br>')}</div>`;
+  }
 }
 
 // ── Inställningar ──────────────────────────────────────
 function exportData() {
-  const data={version:VERSION,exported:new Date().toISOString(),name:localStorage.getItem('hl_name'),log:getLog()};
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='humorloggen-'+todayKey()+'.json';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  const data = {version:VERSION, exported:new Date().toISOString(), name:localStorage.getItem('hl_name'), log:getLog()};
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url  = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = 'humorloggen-'+todayKey()+'.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 function importData(event) {
-  const file=event.target.files[0];if(!file)return;
-  if(!confirm('Importera data? Din nuvarande data ersätts om filen innehåller ett namn eller logg.')){event.target.value='';return;}
-  const reader=new FileReader();
-  reader.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.name)localStorage.setItem('hl_name',d.name);if(d.log){_logCache=null;localStorage.setItem('hl_log',JSON.stringify(d.log));}alert('✓ Data importerad!');closeSettings();loadApp();}catch{alert('Kunde inte läsa filen.');}};
+  const file = event.target.files[0]; if (!file) return;
+  if (!confirm('Importera data? Din nuvarande data ersätts om filen innehåller ett namn eller logg.')) { event.target.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (d.name) localStorage.setItem('hl_name', d.name);
+      if (d.log) { _logCache = null; localStorage.setItem('hl_log', JSON.stringify(d.log)); }
+      alert('✓ Data importerad!'); closePanel('settings-panel'); loadApp();
+    } catch { alert('Kunde inte läsa filen.'); }
+  };
   reader.readAsText(file);
 }
-function openSettings(){document.getElementById('settings-name').value=localStorage.getItem('hl_name')||'';document.getElementById('settings-panel').classList.add('open');}
-function closeSettings(){document.getElementById('settings-panel').classList.remove('open');}
-function saveSettings(){const n=document.getElementById('settings-name').value.trim();if(n)localStorage.setItem('hl_name',n);closeSettings();loadApp();}
+function saveSettings() {
+  const n = document.getElementById('settings-name').value.trim();
+  if (n) localStorage.setItem('hl_name', n);
+  closePanel('settings-panel'); loadApp();
+}
 
 // ── Versionshistorik ───────────────────────────────────
-const HISTORY=[
-  {version:'v0.3',current:true,items:['Berättelse-funktionen aktiverad (regelbaserad, ingen API krävs)','Stil: Varm (dagboksliknande) eller Analytisk','Period: vecka, månad, allt eller eget intervall','Längd: kort eller lång','Versionshistorik tillgänglig inifrån appen (Inställningar → 📋)']},
-  {version:'v0.2',items:['Unik id per loggning (ersätter time som nyckel)','getLog() cachas i minnet för bättre prestanda','Specialtecken i anteckningar hanteras via escHtml()','Bekräftelse innan import av data','Service worker uppgraderad till humorloggen-v02']},
-  {version:'v0.1',items:['Namninmatning vid första start','Logga humör med 5 emojis: 😞 😕 😐 🙂 😊','Klockslag per loggning, kan läggas in bakåt i tid','Valfri fritextanteckning','Flera loggningar per dag','Dagens loggningar – senaste överst','Streak-räknare och snitthumör senaste 30 dagarna','Dagbok grupperad vecka för vecka','Redigera/ta bort anteckning med bekräftelsefråga','Humörgraf med area-fill','Insikter: snitt, trend, bästa/sämsta dag, helg vs vardag, klockslag, längsta glada period, konsistens, bästa/sämsta vecka, gladaste stunden, loggfrekvens, ordfrekvens','Export/import av data','iOS-installationsprompt']}
+const HISTORY = [
+  {version:'v0.4', current:true, items:[
+    'Datumfält för bakåtloggning',
+    'Max 3 loggningar synliga på huvudskärmen + länk till dagboken',
+    'Igår-snitt och totalt snitt i streak-baren',
+    'Klickbara prickar i grafen – visa dagens anteckningar',
+    'Tjockare avdelare mellan dagboksinlägg',
+    'Berättelse omgjord: 📖 Berättelse (dramatisk) och 🤖 Analys (framtidsdator)',
+    'Generisk panel-hantering, renare kod',
+    'Citattecken-bugg i dagboken fixad'
+  ]},
+  {version:'v0.3', items:['Berättelse-funktionen aktiverad (regelbaserad, ingen API krävs)','Stil: Varm (dagboksliknande) eller Analytisk','Period: vecka, månad, allt eller eget intervall','Längd: kort eller lång','Versionshistorik tillgänglig inifrån appen']},
+  {version:'v0.2', items:['Unik id per loggning','getLog() cachas i minnet','escHtml() för specialtecken','Bekräftelse innan import','Service worker uppgraderad']},
+  {version:'v0.1', items:['Grundfunktionalitet: namn, humörlogg, streak, dagbok, graf, insikter, export/import, iOS-prompt']}
 ];
-function openHistory() {
-  closeSettings();
-  const el=document.getElementById('history-content');
-  el.innerHTML=HISTORY.map(v=>{
-    const badge=v.current?'<span class="history-badge">aktuell</span>':'';
-    const items=v.items.map(i=>'<div class="history-item">· '+escHtml(i)+'</div>').join('');
-    return '<div class="history-version"><div class="history-version-title">'+escHtml(v.version)+' '+badge+'</div>'+items+'</div>';
+
+function renderHistory() {
+  document.getElementById('history-content').innerHTML = HISTORY.map(v => {
+    const badge = v.current ? '<span class="history-badge">aktuell</span>' : '';
+    const items = v.items.map(i => `<div class="history-item">· ${escHtml(i)}</div>`).join('');
+    return `<div class="history-version"><div class="history-version-title">${escHtml(v.version)} ${badge}</div>${items}</div>`;
   }).join('');
-  document.getElementById('history-panel').classList.add('open');
 }
-function closeHistory(){document.getElementById('history-panel').classList.remove('open');}
 
 // ── Start ──────────────────────────────────────────────
 function setupApp() {
-  const name=document.getElementById('input-name').value.trim()||'Daniel';
-  localStorage.setItem('hl_name',name);
-  document.getElementById('setup-screen').style.display='none';
+  const name = document.getElementById('input-name').value.trim() || 'Daniel';
+  localStorage.setItem('hl_name', name);
+  document.getElementById('setup-screen').style.display = 'none';
   loadApp();
 }
+
 function loadApp() {
-  _logCache=null;
-  document.getElementById('setup-screen').style.display='none';
-  document.getElementById('app-screen').style.display='block';
-  const today=new Date(),ds=today.toLocaleDateString('sv-SE',{weekday:'long',day:'numeric',month:'long'});
-  document.getElementById('date-display').textContent=ds.charAt(0).toUpperCase()+ds.slice(1);
-  document.getElementById('mood-time').value=nowTime();
-  renderTodayLog(); updateStreak();
+  _logCache = null;
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('app-screen').style.display = 'block';
+  const today = new Date(), ds = today.toLocaleDateString('sv-SE', {weekday:'long', day:'numeric', month:'long'});
+  document.getElementById('date-display').textContent = ds.charAt(0).toUpperCase() + ds.slice(1);
+  document.getElementById('mood-time').value = nowTime();
+  document.getElementById('mood-date').value = todayKey();
+  document.getElementById('settings-name').value = localStorage.getItem('hl_name') || '';
+  renderTodayLog();
+  updateStreak();
+  renderHistory();
 }
-function dismissIOSPrompt(){document.getElementById('ios-prompt').classList.remove('show');}
-const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-const isStandalone=window.matchMedia('(display-mode: standalone)').matches;
-if(isIOS&&!isStandalone){setTimeout(()=>{if(localStorage.getItem('hl_name'))document.getElementById('ios-prompt').classList.add('show');},4000);}
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
-window.addEventListener('load',()=>{if(localStorage.getItem('hl_name'))loadApp();else document.getElementById('setup-screen').style.display='flex';});
+
+function dismissIOSPrompt() { document.getElementById('ios-prompt').classList.remove('show'); }
+
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+if (isIOS && !isStandalone) {
+  setTimeout(() => { if (localStorage.getItem('hl_name')) document.getElementById('ios-prompt').classList.add('show'); }, 4000);
+}
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
+window.addEventListener('load', () => {
+  if (localStorage.getItem('hl_name')) loadApp();
+  else document.getElementById('setup-screen').style.display = 'flex';
+});
 </script>
 </body>
 </html>
