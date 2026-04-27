@@ -169,7 +169,7 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
     <div class="setup-logo">
       <h1>Humörloggen</h1>
       <p>Din dagliga humörlogg</p>
-      <p class="version">v0.4</p>
+      <p class="version">v0.5</p>
     </div>
     <div class="form-group">
       <label>Ditt namn</label>
@@ -181,7 +181,7 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
 
 <div id="app-screen">
   <div class="top-bar">
-    <span class="app-name">Humörloggen<span class="version-tag">v0.4</span></span>
+    <span class="app-name">Humörloggen<span class="version-tag">v0.5</span></span>
     <div class="icon-btn" onclick="openPanel('settings-panel')">⚙️</div>
   </div>
   <div class="date-display" id="date-display"></div>
@@ -335,7 +335,7 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
 </div>
 
 <script>
-const VERSION = '0.4';
+const VERSION = '0.5';
 const EMOJI_MAP = {1:'😞',2:'😕',3:'😐',4:'🙂',5:'😊'};
 let selectedMood = null;
 let _logCache = null;
@@ -609,32 +609,69 @@ function renderChart() {
     ctx.textAlign = 'right'; ctx.fillText(EMOJI_MAP[v], pad.left-2, y+4);
   }
 
-  // Area fill
-  if (entries.length > 1) {
+  // Beräkna punktkoordinater
+  const pts = entries.map((e, i) => ({
+    x: pad.left + i*bw + bw/2,
+    y: pad.top + ch - ((e.mood-1)/4)*ch,
+    entry: e
+  }));
+
+  // Hjälpfunktion: catmull-rom kontrollpunkter → bézier
+  function cpBez(p0, p1, p2, t) {
+    return { cx: p1.x + (p2.x - p0.x) * t / 6, cy: p1.y + (p2.y - p0.y) * t / 6 };
+  }
+
+  function drawSpline(points, closedToBottom) {
+    if (points.length < 2) return;
     ctx.beginPath();
-    entries.forEach((e, i) => {
-      const x = pad.left + i*bw + bw/2, y = pad.top + ch - ((e.mood-1)/4)*ch;
-      i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-    });
-    ctx.lineTo(pad.left + (entries.length-1)*bw + bw/2, pad.top+ch);
-    ctx.lineTo(pad.left + bw/2, pad.top+ch);
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(26,47,74,0.08)'; ctx.fill();
-    ctx.strokeStyle = '#1A2F4A'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
-    ctx.beginPath();
-    entries.forEach((e, i) => {
-      const x = pad.left + i*bw + bw/2, y = pad.top + ch - ((e.mood-1)/4)*ch;
-      i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-    });
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[Math.max(i-1, 0)];
+      const p1 = points[i];
+      const p2 = points[i+1];
+      const p3 = points[Math.min(i+2, points.length-1)];
+      const cp1 = cpBez(p0, p1, p2, 0.5);
+      const cp2 = { cx: p2.x - (p3.x - p1.x)*0.5/6, cy: p2.y - (p3.y - p1.y)*0.5/6 };
+      ctx.bezierCurveTo(cp1.cx, cp1.cy, cp2.cx, cp2.cy, p2.x, p2.y);
+    }
+    if (closedToBottom) {
+      const last = points[points.length-1], first = points[0];
+      ctx.lineTo(last.x, pad.top + ch);
+      ctx.lineTo(first.x, pad.top + ch);
+      ctx.closePath();
+    }
+  }
+
+  if (pts.length > 1) {
+    // Area gradient fill
+    const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
+    grad.addColorStop(0, 'rgba(26,47,74,0.18)');
+    grad.addColorStop(1, 'rgba(26,47,74,0.01)');
+    drawSpline(pts, true);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Linje
+    drawSpline(pts, false);
+    ctx.strokeStyle = '#1A2F4A';
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
     ctx.stroke();
   }
 
   // Prickar – spara koordinater för klick
-  entries.forEach((e, i) => {
-    const x = pad.left + i*bw + bw/2, y = pad.top + ch - ((e.mood-1)/4)*ch;
-    ctx.fillStyle = '#1A2F4A'; ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#D6E8F5'; ctx.beginPath(); ctx.arc(x, y, 1.5, 0, Math.PI*2); ctx.fill();
-    chartDots.push({x, y, entry: e});
+  pts.forEach(pt => {
+    // Skugga
+    ctx.shadowColor = 'rgba(26,47,74,0.25)';
+    ctx.shadowBlur = 4;
+    ctx.fillStyle = '#1A2F4A';
+    ctx.beginPath(); ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI*2); ctx.fill();
+    ctx.shadowBlur = 0;
+    // Vit mitt
+    ctx.fillStyle = '#D6E8F5';
+    ctx.beginPath(); ctx.arc(pt.x, pt.y, 2, 0, Math.PI*2); ctx.fill();
+    chartDots.push({x: pt.x, y: pt.y, entry: pt.entry});
   });
 
   // X-axel datum
@@ -664,10 +701,9 @@ function handleChartClick(ev, canvas) {
   if (!closest) { tooltip.style.display = 'none'; return; }
   const e   = closest.entry;
   const dn  = new Date(e.key).toLocaleDateString('sv-SE', {weekday:'long', day:'numeric', month:'long'});
-  const dayEntries = getEntriesForKey(e.key);
-  const notes = dayEntries.filter(x => x.note).map(x => `"${escHtml(x.note)}"`).join('<br>');
-  const avg   = (dayEntries.reduce((s,x) => s+x.mood, 0) / dayEntries.length).toFixed(1);
-  tooltip.innerHTML = `<strong>${dn}</strong><br>Snitt: ${EMOJI_MAP[Math.round(parseFloat(avg))]} ${avg}` + (notes ? `<br>${notes}` : '');
+  const time = e.time ? ` kl ${e.time}` : '';
+  const note = e.note ? `<br>"${escHtml(e.note)}"` : '';
+  tooltip.innerHTML = `<strong>${dn}${time}</strong><br>${EMOJI_MAP[e.mood]} ${e.mood}.0${note}`;
   tooltip.style.display = 'block';
   tooltip.style.left = Math.min(closest.x, canvas.offsetWidth - 210) + 'px';
   tooltip.style.top  = (closest.y - tooltip.offsetHeight - 10) + 'px';
@@ -750,7 +786,7 @@ function renderInsights() {
     `<div class="insight-block"><h3>📊 Översikt</h3>
       ${irow('📈','Totalt snitt', mf(allM)+' av 5 — '+entries.length+' loggningar.')}
       ${irow('🔥','Senaste 7 dagarna','Snitt '+(mf(last7)||'—')+' av 5.')}
-      ${tV ? irow(parseFloat(tV)>0?'⬆️':'⬇️','Trend',(parseFloat(tV)>0?'Bättre':'Sämre')+' än föregående vecka ('+(parseFloat(tV)>0?'+':'')+tV+').') : ''}
+      ${tV ? (parseFloat(tV)===0 ? irow('➡️','Trend','Oförändrat jämfört med föregående vecka.') : irow(parseFloat(tV)>0?'⬆️':'⬇️','Trend',(parseFloat(tV)>0?'Bättre':'Sämre')+' än föregående vecka ('+(parseFloat(tV)>0?'+':'')+tV+').')) : ''}
       ${lHigh>1 ? irow('🌟','Längsta glada period',lHigh+' dagar i rad med humör 🙂 eller bättre.') : ''}
       ${std ? irow('〰️','Konsistens','Standardavvikelse '+std+' — '+(parseFloat(std)<0.8?'du är ganska stabil i humöret':'ditt humör varierar en hel del')+'.') : ''}
     </div>
@@ -981,7 +1017,11 @@ function saveSettings() {
 
 // ── Versionshistorik ───────────────────────────────────
 const HISTORY = [
-  {version:'v0.4', current:true, items:[
+  {version:'v0.5', current:true, items:[
+    'Mjukare graf med Catmull-Rom-spline och gradientfyllning',
+    'Polerade datapunkter med djupskugga'
+  ]},
+  {version:'v0.4', items:[
     'Datumfält för bakåtloggning',
     'Max 3 loggningar synliga på huvudskärmen + länk till dagboken',
     'Igår-snitt och totalt snitt i streak-baren',
