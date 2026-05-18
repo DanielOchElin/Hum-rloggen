@@ -1,8 +1,37 @@
 Humörloggen – Versionshistorik
 ==============================
 
-v0.3 (aktuell)
+v0.6 (aktuell)
 --------------
+• Känslotaggar: ledsen, arg, orolig, trött, ångest – valfritt tillägg vid loggning
+• Känslotaggar visas i logglistan och dagboken
+• Tidsval på grafen: Vecka, Månad, Allt
+• Mjuk snittlinje (dagssnitt) i bakgrunden på grafen
+• Råpunkter (alla loggningar) visas som diskreta prickar bakom snittlinjen
+
+v0.5
+--------------
+• Mjukare graf med Catmull-Rom-spline och gradientfyllning
+• Polerade datapunkter med droppskugga
+• Tooltip visar bara den specifika punkten man tryckte på, inte hela dagen
+• Trend visar "Oförändrat" istället för "Sämre (0.0)" vid nollförändring
+
+v0.4
+--------------
+• Datumfält för bakåtloggning – logga direkt på valfritt datum
+• Max 3 loggningar synliga på huvudskärmen + länk till dagboken
+• Streak-baren utökad: igår-snitt och totalt snitt tillkomna
+• Klickbara prickar i grafen – visar datum, snitt och anteckningar
+• Tjockare avdelare mellan dagboksinlägg
+• Berättelse omgjord:
+  – 📖 Berättelse: dramatisk, ordrik, med bildspråk och rytmväxling
+  – 🤖 Analys: framtidsdator med koefficienter och rekommendationer
+• Generisk panel-hantering (openPanel/closePanel)
+• Citattecken-bugg i dagboken fixad (data-attribut istället för inline onclick)
+• Insikter och dagbok brutna i egna render-funktioner
+
+v0.3
+----
 • Berättelse-funktionen aktiverad (regelbaserad, utan API)
   – Varm eller analytisk stil
   – Välj period: vecka, månad, allt eller eget intervall

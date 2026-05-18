@@ -1,4 +1,4 @@
-const CACHE_NAME = 'humorloggen-v05';
+const CACHE_NAME = 'humorloggen-v06';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
