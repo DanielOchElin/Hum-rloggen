@@ -119,17 +119,18 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
 .insight-text strong { display: block; font-size: 0.80rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; }
 .insight-empty { font-size: 0.82rem; color: var(--muted); text-align: center; padding: 1.5rem 0; }
 
-/* ── Känslotaggar ── */
-.emotion-tags { display: flex; justify-content: space-between; margin: 0.6rem 0 0.2rem; }
-.emotion-tag-btn { font-size: 1.45rem; background: none; border: 2px solid transparent; cursor: pointer; padding: 0.2rem; border-radius: 50%; transition: transform 0.15s, border-color 0.15s; opacity: 0.38; -webkit-tap-highlight-color: transparent; }
-.emotion-tag-btn.selected { opacity: 1; transform: scale(1.18); border-color: var(--accent); background: rgba(26,47,74,0.07); }
-.emotion-tags-label { font-size: 0.68rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; font-weight: 500; }
-.diary-emotions { display: flex; gap: 3px; margin-top: 3px; font-size: 0.85rem; line-height: 1; }
-.today-emotions { font-size: 0.82rem; margin-left: 2px; }
+/* ── Känslo- och aktivitetstaggar ── */
+.tag-section { margin: 0.7rem 0 0.2rem; }
+.tag-label { font-size: 0.65rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; font-weight: 500; }
+.tag-row { display: flex; gap: 0.3rem; }
+.tag-btn { font-size: 1.35rem; background: none; border: 2px solid transparent; cursor: pointer; padding: 0.18rem 0.3rem; border-radius: 8px; transition: transform 0.15s, border-color 0.15s, background 0.15s; opacity: 0.35; -webkit-tap-highlight-color: transparent; }
+.tag-btn.selected { opacity: 1; transform: scale(1.15); border-color: var(--accent); background: rgba(26,47,74,0.07); }
+.diary-tags { display: flex; gap: 3px; margin-top: 3px; font-size: 0.82rem; line-height: 1; flex-wrap: wrap; }
+.today-tags { font-size: 0.80rem; margin-left: 1px; }
 
 /* ── Graf tidsval ── */
 .chart-period-row { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
-.chart-period-btn { flex: 1; padding: 0.45rem 0.3rem; border: 1.5px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.4); font-family: 'Jost', sans-serif; font-size: 0.75rem; color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; }
+.chart-period-btn { flex: 1; padding: 0.42rem 0.3rem; border: 1.5px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.4); font-family: 'Jost', sans-serif; font-size: 0.75rem; color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; }
 .chart-period-btn.active { background: var(--accent); color: var(--surface); border-color: var(--accent); }
 
 /* ── Berättelse ── */
@@ -231,19 +232,28 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
         <button class="mood-emoji-btn" data-val="4" onclick="selectMood(4)">🙂</button>
         <button class="mood-emoji-btn" data-val="5" onclick="selectMood(5)">😊</button>
       </div>
-      <div class="emotion-tags-label">Känslor (valfritt)</div>
-      <div class="emotion-tags">
-        <button class="emotion-tag-btn" data-emotion="ledsen" onclick="toggleEmotion('ledsen')">😢</button>
-        <button class="emotion-tag-btn" data-emotion="arg" onclick="toggleEmotion('arg')">😠</button>
-        <button class="emotion-tag-btn" data-emotion="orolig" onclick="toggleEmotion('orolig')">😟</button>
-        <button class="emotion-tag-btn" data-emotion="trött" onclick="toggleEmotion('trött')">😴</button>
-        <button class="emotion-tag-btn" data-emotion="ångest" onclick="toggleEmotion('ångest')">😰</button>
-      </div>
       <div class="mood-time-row">
         <label>Datum</label>
         <input type="date" class="mood-date-input" id="mood-date" onchange="renderTodayLog()" />
         <label>Kl</label>
         <input type="time" class="mood-time-input" id="mood-time" />
+      </div>
+      <div class="tag-section">
+        <div class="tag-label">Känslor</div>
+        <div class="tag-row">
+          <button class="tag-btn" data-emotion="ledsen" onclick="toggleEmotion('ledsen')">😢</button>
+          <button class="tag-btn" data-emotion="arg" onclick="toggleEmotion('arg')">😠</button>
+          <button class="tag-btn" data-emotion="orolig" onclick="toggleEmotion('orolig')">😟</button>
+          <button class="tag-btn" data-emotion="trött" onclick="toggleEmotion('trött')">😴</button>
+          <button class="tag-btn" data-emotion="ångest" onclick="toggleEmotion('ångest')">😰</button>
+        </div>
+      </div>
+      <div class="tag-section">
+        <div class="tag-label">Aktivitet</div>
+        <div class="tag-row">
+          <button class="tag-btn" data-activity="alkohol" onclick="toggleActivity('alkohol')">🍾</button>
+          <button class="tag-btn" data-activity="tablett" onclick="toggleActivity('tablett')">💊</button>
+        </div>
       </div>
       <textarea class="mood-note" id="mood-note" placeholder="Vad händer? Hur känns det?…" rows="3"></textarea>
       <button class="mood-save" onclick="saveMood()">Spara</button>
@@ -364,8 +374,10 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
 const VERSION = '0.6';
 const EMOJI_MAP = {1:'😞',2:'😕',3:'😐',4:'🙂',5:'😊'};
 const EMOTION_MAP = {ledsen:'😢', arg:'😠', orolig:'😟', trött:'😴', ångest:'😰'};
+const ACTIVITY_MAP = {alkohol:'🍾', tablett:'💊'};
 let selectedMood = null;
 let selectedEmotions = new Set();
+let selectedActivities = new Set();
 let _logCache = null;
 let chartDots = [];
 let chartPeriod = 'week';
@@ -430,8 +442,16 @@ function selectMood(val) {
 function toggleEmotion(emotion) {
   if (selectedEmotions.has(emotion)) selectedEmotions.delete(emotion);
   else selectedEmotions.add(emotion);
-  document.querySelectorAll('.emotion-tag-btn').forEach(b =>
+  document.querySelectorAll('[data-emotion]').forEach(b =>
     b.classList.toggle('selected', selectedEmotions.has(b.dataset.emotion))
+  );
+}
+
+function toggleActivity(activity) {
+  if (selectedActivities.has(activity)) selectedActivities.delete(activity);
+  else selectedActivities.add(activity);
+  document.querySelectorAll('[data-activity]').forEach(b =>
+    b.classList.toggle('selected', selectedActivities.has(b.dataset.activity))
   );
 }
 
@@ -443,13 +463,18 @@ function saveMood() {
   const log  = getLog();
   if (!log[key]) log[key] = [];
   else if (!Array.isArray(log[key])) log[key] = [log[key]];
-  log[key].push({id: makeId(), mood: selectedMood, note, time, emotions: selectedEmotions.size ? [...selectedEmotions] : []});
+  log[key].push({
+    id: makeId(), mood: selectedMood, note, time,
+    emotions: selectedEmotions.size ? [...selectedEmotions] : [],
+    activities: selectedActivities.size ? [...selectedActivities] : []
+  });
   log[key].sort((a,b) => (a.time||'').localeCompare(b.time||''));
   saveLog(log);
   selectedMood = null;
   selectedEmotions = new Set();
+  selectedActivities = new Set();
   document.querySelectorAll('.mood-emoji-btn').forEach(b => b.classList.remove('selected'));
-  document.querySelectorAll('.emotion-tag-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById('mood-note').value = '';
   document.getElementById('mood-time').value = nowTime();
   const s = document.getElementById('mood-saved');
@@ -468,12 +493,13 @@ function renderTodayLog() {
   const visible  = reversed.slice(0, 3);
   const hidden   = reversed.length - visible.length;
   el.innerHTML = visible.map(e => {
-    const emotionStr = (e.emotions && e.emotions.length)
-      ? `<span class="today-emotions">${e.emotions.map(em => EMOTION_MAP[em]||'').join('')}</span>`
-      : '';
+    const tags = [
+      ...(e.emotions||[]).map(em => EMOTION_MAP[em]||''),
+      ...(e.activities||[]).map(ac => ACTIVITY_MAP[ac]||'')
+    ].join('');
     return `<div class="today-item">
       <span class="today-time">${e.time||'--:--'}</span>
-      <span class="today-emoji">${EMOJI_MAP[e.mood]}${emotionStr}</span>
+      <span class="today-emoji">${EMOJI_MAP[e.mood]}${tags ? `<span class="today-tags">${tags}</span>` : ''}</span>
       <span>${escHtml(e.note||'')}</span>
     </div>`;
   }).join('') + (hidden > 0
@@ -540,7 +566,13 @@ function diaryEntryHTML(e) {
       </div>
       <div class="diary-emoji-big">
         ${EMOJI_MAP[e.mood]}
-        ${(e.emotions && e.emotions.length) ? `<div class="diary-emotions">${e.emotions.map(em => EMOTION_MAP[em]||'').join('')}</div>` : ''}
+        ${(() => {
+          const tags = [
+            ...(e.emotions||[]).map(em => EMOTION_MAP[em]||''),
+            ...(e.activities||[]).map(ac => ACTIVITY_MAP[ac]||'')
+          ].join('');
+          return tags ? `<div class="diary-tags">${tags}</div>` : '';
+        })()}
       </div>
       <div class="diary-right">
         ${note}
@@ -637,10 +669,10 @@ function renderChart() {
   const allEntries = getAllEntries();
   let entries = allEntries;
   if (chartPeriod === 'week') {
-    const cut = new Date(); cut.setDate(cut.getDate() - 7);
+    const cut = new Date(); cut.setDate(cut.getDate()-7);
     entries = allEntries.filter(e => new Date(e.key) >= cut);
   } else if (chartPeriod === 'month') {
-    const cut = new Date(); cut.setDate(cut.getDate() - 30);
+    const cut = new Date(); cut.setDate(cut.getDate()-30);
     entries = allEntries.filter(e => new Date(e.key) >= cut);
   }
 
@@ -650,147 +682,130 @@ function renderChart() {
   canvas.width  = W * devicePixelRatio;
   canvas.height = H * devicePixelRatio;
   ctx.scale(devicePixelRatio, devicePixelRatio);
-  const pad = {top:20, right:20, bottom:35, left:30};
-  const cw = W - pad.left - pad.right, ch = H - pad.top - pad.bottom;
-  ctx.clearRect(0, 0, W, H);
+  const pad = {top:20, right:16, bottom:35, left:30};
+  const cw = W-pad.left-pad.right, ch = H-pad.top-pad.bottom;
+  ctx.clearRect(0,0,W,H);
   chartDots = [];
 
   if (!entries.length) {
-    ctx.fillStyle = '#7A9AB5'; ctx.font = '13px Jost,sans-serif';
-    ctx.textAlign = 'center'; ctx.fillText('Ingen data för perioden', W/2, H/2);
+    ctx.fillStyle='#7A9AB5'; ctx.font='13px Jost,sans-serif';
+    ctx.textAlign='center'; ctx.fillText('Ingen data för perioden', W/2, H/2);
     return;
   }
 
-  // Gruppera per dag → dagssnitt för snittlinjen
+  // Dagssnitt
   const dayMap = {};
   entries.forEach(e => {
-    if (!dayMap[e.key]) dayMap[e.key] = [];
+    if (!dayMap[e.key]) dayMap[e.key]=[];
     dayMap[e.key].push(e.mood);
   });
   const dayKeys = Object.keys(dayMap).sort();
   const dayAvgs = dayKeys.map(k => ({
     key: k,
-    avg: dayMap[k].reduce((s,v) => s+v, 0) / dayMap[k].length
+    avg: dayMap[k].reduce((s,v)=>s+v,0)/dayMap[k].length
   }));
 
-  // X-skala baseras på alla råpunkter
-  const bw = cw / Math.max(entries.length, 1);
-
-  // Råpunkter (alla loggningar)
-  const pts = entries.map((e, i) => ({
-    x: pad.left + i*bw + bw/2,
-    y: pad.top + ch - ((e.mood-1)/4)*ch,
-    entry: e
-  }));
-
-  // Snittlinje – en punkt per dag, x interpoleras mot råpunktsskalan
+  // X-skala baserad på kalenderdagar
   const firstDate = new Date(dayKeys[0]);
   const lastDate  = new Date(dayKeys[dayKeys.length-1]);
-  const totalDays = Math.max((lastDate - firstDate) / 86400000, 1);
-  const avgPts = dayAvgs.map(d => {
-    const daysFromStart = (new Date(d.key) - firstDate) / 86400000;
-    return {
-      x: pad.left + (daysFromStart / totalDays) * cw,
-      y: pad.top + ch - ((d.avg-1)/4)*ch
-    };
-  });
+  const totalMs   = Math.max(lastDate-firstDate, 86400000);
 
-  // Grid
-  for (let v = 1; v <= 5; v++) {
-    const y = pad.top + ch - ((v-1)/4)*ch;
-    ctx.strokeStyle = 'rgba(26,47,74,0.12)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left+cw, y); ctx.stroke();
-    ctx.fillStyle = '#7A9AB5'; ctx.font = '11px Jost,sans-serif';
-    ctx.textAlign = 'right'; ctx.fillText(EMOJI_MAP[v], pad.left-2, y+4);
+  function xForDate(dateStr) {
+    return pad.left + ((new Date(dateStr)-firstDate)/totalMs)*cw;
   }
 
-  // Hjälpfunktion: catmull-rom → bézier
+  // Hjälpfunktion: Catmull-Rom → Bézier
   function cpBez(p0, p1, p2, t) {
-    return { cx: p1.x + (p2.x - p0.x) * t / 6, cy: p1.y + (p2.y - p0.y) * t / 6 };
+    return { cx: p1.x+(p2.x-p0.x)*t/6, cy: p1.y+(p2.y-p0.y)*t/6 };
   }
-  function drawSpline(points, closedToBottom) {
+  function drawSpline(points, tension) {
     if (points.length < 2) return;
+    const t = tension||0.5;
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
-    for (let i = 0; i < points.length - 1; i++) {
-      const p0 = points[Math.max(i-1, 0)];
-      const p1 = points[i];
-      const p2 = points[i+1];
-      const p3 = points[Math.min(i+2, points.length-1)];
-      const cp1 = cpBez(p0, p1, p2, 0.5);
-      const cp2 = { cx: p2.x - (p3.x - p1.x)*0.5/6, cy: p2.y - (p3.y - p1.y)*0.5/6 };
-      ctx.bezierCurveTo(cp1.cx, cp1.cy, cp2.cx, cp2.cy, p2.x, p2.y);
-    }
-    if (closedToBottom) {
-      const last = points[points.length-1], first = points[0];
-      ctx.lineTo(last.x, pad.top + ch);
-      ctx.lineTo(first.x, pad.top + ch);
-      ctx.closePath();
+    for (let i=0; i<points.length-1; i++) {
+      const p0=points[Math.max(i-1,0)], p1=points[i],
+            p2=points[i+1], p3=points[Math.min(i+2,points.length-1)];
+      const cp1=cpBez(p0,p1,p2,t);
+      const cp2={cx:p2.x-(p3.x-p1.x)*t/6, cy:p2.y-(p3.y-p1.y)*t/6};
+      ctx.bezierCurveTo(cp1.cx,cp1.cy,cp2.cx,cp2.cy,p2.x,p2.y);
     }
   }
 
-  if (pts.length > 1) {
-    // Area gradient fill
-    const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
-    grad.addColorStop(0, 'rgba(26,47,74,0.13)');
-    grad.addColorStop(1, 'rgba(26,47,74,0.01)');
-    drawSpline(pts, true);
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    // Råpunktslinje
-    drawSpline(pts, false);
-    ctx.strokeStyle = 'rgba(26,47,74,0.55)';
-    ctx.lineWidth = 1.5;
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    ctx.stroke();
+  // Grid
+  for (let v=1; v<=5; v++) {
+    const y = pad.top+ch-((v-1)/4)*ch;
+    ctx.strokeStyle='rgba(26,47,74,0.10)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(pad.left+cw,y); ctx.stroke();
+    ctx.fillStyle='#7A9AB5'; ctx.font='11px Jost,sans-serif';
+    ctx.textAlign='right'; ctx.fillText(EMOJI_MAP[v], pad.left-2, y+4);
   }
 
-  // Snittlinje (dagssnitt) – ljus och mjuk, i bakgrunden
+  // Snittlinjepunkter (dagssnitt)
+  const avgPts = dayAvgs.map(d => ({
+    x: xForDate(d.key),
+    y: pad.top+ch-((d.avg-1)/4)*ch
+  }));
+
+  // LAGER 1 – Rullande 7-dagarssnitt (mjuk våglinje bakom allt)
+  const WINDOW=7;
+  const rollingPts = dayAvgs.map((d,i) => {
+    const half=Math.floor(WINDOW/2);
+    const slice=dayAvgs.slice(Math.max(0,i-half), Math.min(dayAvgs.length,i+half+1));
+    const avg=slice.reduce((s,v)=>s+v.avg,0)/slice.length;
+    return { x: xForDate(d.key), y: pad.top+ch-((avg-1)/4)*ch };
+  });
+
+  if (rollingPts.length > 1) {
+    // Gradient under vågen
+    const wg = ctx.createLinearGradient(0,pad.top,0,pad.top+ch);
+    wg.addColorStop(0,'rgba(122,154,181,0.22)');
+    wg.addColorStop(1,'rgba(122,154,181,0.00)');
+    drawSpline(rollingPts, 0.6);
+    ctx.lineTo(rollingPts[rollingPts.length-1].x, pad.top+ch);
+    ctx.lineTo(rollingPts[0].x, pad.top+ch);
+    ctx.closePath();
+    ctx.fillStyle=wg; ctx.fill();
+
+    drawSpline(rollingPts, 0.6);
+    ctx.strokeStyle='rgba(122,154,181,0.72)';
+    ctx.lineWidth=5; ctx.lineJoin='round'; ctx.lineCap='round'; ctx.stroke();
+  }
+
+  // LAGER 2 – Råpunkter (diskreta prickar, ingen linje)
+  entries.forEach(e => {
+    const x=xForDate(e.key), y=pad.top+ch-((e.mood-1)/4)*ch;
+    ctx.beginPath(); ctx.arc(x,y,2.2,0,Math.PI*2);
+    ctx.fillStyle='rgba(26,47,74,0.28)'; ctx.fill();
+    chartDots.push({x, y, entry:e});
+  });
+
+  // LAGER 3 – Dagssnittlinje (skarp Catmull-Rom med prickar)
   if (avgPts.length > 1) {
-    drawSpline(avgPts, false);
-    ctx.strokeStyle = 'rgba(26,47,74,0.90)';
-    ctx.lineWidth = 2.5;
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    ctx.setLineDash([]);
-    ctx.stroke();
+    drawSpline(avgPts, 0.4);
+    ctx.strokeStyle='#1A2F4A'; ctx.lineWidth=2;
+    ctx.lineJoin='round'; ctx.lineCap='round'; ctx.stroke();
+
+    avgPts.forEach(pt => {
+      ctx.shadowColor='rgba(26,47,74,0.25)'; ctx.shadowBlur=5;
+      ctx.fillStyle='#1A2F4A';
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,4,0,Math.PI*2); ctx.fill();
+      ctx.shadowBlur=0;
+      ctx.fillStyle='#D6E8F5';
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,1.8,0,Math.PI*2); ctx.fill();
+    });
   }
-
-  // Råpunkter – små, diskreta
-  pts.forEach(pt => {
-    ctx.shadowColor = 'rgba(26,47,74,0.18)';
-    ctx.shadowBlur = 3;
-    ctx.fillStyle = 'rgba(26,47,74,0.55)';
-    ctx.beginPath(); ctx.arc(pt.x, pt.y, 3, 0, Math.PI*2); ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = '#D6E8F5';
-    ctx.beginPath(); ctx.arc(pt.x, pt.y, 1.3, 0, Math.PI*2); ctx.fill();
-    chartDots.push({x: pt.x, y: pt.y, entry: pt.entry});
-  });
-
-  // Snittlinjen – markerade dagspunkter
-  avgPts.forEach((pt, i) => {
-    ctx.shadowColor = 'rgba(26,47,74,0.30)';
-    ctx.shadowBlur = 5;
-    ctx.fillStyle = '#1A2F4A';
-    ctx.beginPath(); ctx.arc(pt.x, pt.y, 5, 0, Math.PI*2); ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = '#D6E8F5';
-    ctx.beginPath(); ctx.arc(pt.x, pt.y, 2.2, 0, Math.PI*2); ctx.fill();
-  });
 
   // X-axel datum
-  ctx.fillStyle = '#7A9AB5'; ctx.font = '9px Jost,sans-serif'; ctx.textAlign = 'center';
-  entries.forEach((e, i) => {
-    if (i % Math.ceil(entries.length/6) === 0) {
-      const d = new Date(e.key);
-      ctx.fillText(d.toLocaleDateString('sv-SE', {day:'numeric', month:'short'}), pad.left+i*bw+bw/2, H-6);
+  ctx.fillStyle='#7A9AB5'; ctx.font='9px Jost,sans-serif'; ctx.textAlign='center';
+  const step=Math.ceil(dayKeys.length/6);
+  dayKeys.forEach((k,i) => {
+    if (i%step===0) {
+      const d=new Date(k);
+      ctx.fillText(d.toLocaleDateString('sv-SE',{day:'numeric',month:'short'}), xForDate(k), H-6);
     }
   });
 
-  // Klick/touch på graf
   canvas.onclick = (ev) => handleChartClick(ev, canvas);
   canvas.ontouchend = (ev) => { ev.preventDefault(); handleChartClick(ev.changedTouches[0], canvas); };
 }
@@ -1125,11 +1140,11 @@ function saveSettings() {
 // ── Versionshistorik ───────────────────────────────────
 const HISTORY = [
   {version:'v0.6', current:true, items:[
-    'Känslotaggar: ledsen, arg, orolig, trött, ångest – valfritt tillägg vid loggning',
-    'Känslotaggar visas i logglistan och dagboken',
-    'Tidsval på grafen: Vecka, Månad, Allt',
-    'Mjuk snittlinje (dagssnitt) i bakgrunden på grafen',
-    'Råpunkter (alla loggningar) visas som diskreta prickar bakom snittlinjen'
+    'Känslotaggar: ledsen 😢 arg 😠 orolig 😟 trött 😴 ångest 😰 – valfritt tillägg vid loggning',
+    'Aktivitetstaggar: alkohol 🍾 och tablett 💊 – separat rad vid loggning',
+    'Taggar visas i dagens logg och dagboken',
+    'Tidsval på grafen: Vecka / Månad / Allt',
+    'Tre grafslager: diskreta råpunkter, dagssnittlinje (Catmull-Rom) och mjuk 7-dagarsvåg i bakgrunden'
   ]},
   {version:'v0.5', items:[
     'Mjukare graf med Catmull-Rom-spline och gradientfyllning',
