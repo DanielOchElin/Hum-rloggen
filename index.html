@@ -183,7 +183,7 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
     <div class="setup-logo">
       <h1>Humörloggen</h1>
       <p>Din dagliga humörlogg</p>
-      <p class="version">v0.6</p>
+      <p class="version">v0.7</p>
     </div>
     <div class="form-group">
       <label>Ditt namn</label>
@@ -195,7 +195,7 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
 
 <div id="app-screen">
   <div class="top-bar">
-    <span class="app-name">Humörloggen<span class="version-tag">v0.6</span></span>
+    <span class="app-name">Humörloggen<span class="version-tag">v0.7</span></span>
     <div class="icon-btn" onclick="openPanel('settings-panel')">⚙️</div>
   </div>
   <div class="date-display" id="date-display"></div>
@@ -253,6 +253,7 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
         <div class="tag-row">
           <button class="tag-btn" data-activity="alkohol" onclick="toggleActivity('alkohol')">🍾</button>
           <button class="tag-btn" data-activity="tablett" onclick="toggleActivity('tablett')">💊</button>
+          <button class="tag-btn" data-activity="träning" onclick="toggleActivity('träning')">🏋️</button>
         </div>
       </div>
       <textarea class="mood-note" id="mood-note" placeholder="Vad händer? Hur känns det?…" rows="3"></textarea>
@@ -266,7 +267,7 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
     <button class="action-btn" onclick="openPanel('diary-panel'); renderDiary()">📓 Dagbok</button>
     <button class="action-btn" onclick="openPanel('chart-panel'); setTimeout(renderChart,150)">📈 Graf</button>
     <button class="action-btn" onclick="openPanel('insights-panel'); renderInsights()">🔍 Insikter</button>
-    <button class="action-btn story-btn" onclick="openPanel('story-panel'); initStory()">✨ Berättelse</button>
+    <button class="action-btn" id="cycle-action-btn" style="display:none" onclick="openPanel('cycle-panel'); renderCyclePanel()">🌙 Cykel</button>
   </div>
   <div class="bottom-space"></div>
 </div>
@@ -290,10 +291,33 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
       <button class="chart-period-btn" id="cp-month" onclick="setChartPeriod('month')">Månad</button>
       <button class="chart-period-btn" id="cp-all" onclick="setChartPeriod('all')">Allt</button>
     </div>
+    <div class="chart-period-row">
+      <button class="chart-period-btn active" id="cl-raw" onclick="toggleLayer('raw')">Råpunkter</button>
+      <button class="chart-period-btn active" id="cl-avg" onclick="toggleLayer('avg')">Dagssnitt</button>
+      <button class="chart-period-btn active" id="cl-wave" onclick="toggleLayer('wave')">Mjuk våg</button>
+    </div>
     <div class="chart-wrap">
       <canvas id="moodChart" height="220"></canvas>
       <div class="chart-tooltip" id="chart-tooltip"></div>
     </div>
+  </div>
+</div>
+
+<!-- Cykel -->
+<div class="panel-overlay" id="cycle-panel">
+  <div class="panel-sheet">
+    <button class="panel-close" onclick="closePanel('cycle-panel')">✕</button>
+    <h2 class="serif">Cykelspårning</h2>
+    <div id="cycle-status"></div>
+    <div class="form-group" style="margin-top:1.2rem">
+      <label>Första mensdagen</label>
+      <input type="date" class="mood-date-input" style="width:100%;margin-bottom:0.8rem" id="cycle-start-date" />
+      <label>Mensens längd i dagar (valfritt)</label>
+      <input type="number" min="1" max="15" placeholder="t.ex. 5" class="mood-date-input" style="width:100%" id="cycle-length-input" />
+      <button class="btn-primary" onclick="logPeriodStart()">Logga mensstart</button>
+    </div>
+    <div class="section-title" style="margin-top:1rem">Historik</div>
+    <div id="cycle-history"></div>
   </div>
 </div>
 
@@ -353,6 +377,7 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
     </div>
     <button class="btn-primary" onclick="saveSettings()">Spara</button>
     <div class="data-btns">
+      <button class="data-btn" id="cycle-toggle-btn" onclick="toggleCycleTracking()">🌙 Cykelspårning: Av</button>
       <button class="data-btn" onclick="exportData()">📤 Exportera data</button>
       <button class="data-btn" onclick="document.getElementById('import-file').click()">📥 Importera data</button>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
@@ -371,16 +396,20 @@ canvas#moodChart { width: 100% !important; cursor: pointer; }
 </div>
 
 <script>
-const VERSION = '0.6';
+const VERSION = '0.7';
 const EMOJI_MAP = {1:'😞',2:'😕',3:'😐',4:'🙂',5:'😊'};
 const EMOTION_MAP = {ledsen:'😢', arg:'😠', orolig:'😟', trött:'😴', ångest:'😰'};
-const ACTIVITY_MAP = {alkohol:'🍾', tablett:'💊'};
+const ACTIVITY_MAP = {alkohol:'🍾', tablett:'💊', 'träning':'🏋️'};
+const PHASE_LABELS = {mens:'Mens', follikel:'Follikelfas', agglossning:'Ägglossning', luteal:'Lutealfas'};
+const PHASE_ICONS  = {mens:'🩸', follikel:'🌱', agglossning:'🌕', luteal:'🌙'};
+const PHASE_COLORS = {mens:'rgba(139,58,47,0.12)', follikel:'rgba(122,154,181,0.10)', agglossning:'rgba(214,168,80,0.16)', luteal:'rgba(130,100,160,0.12)'};
 let selectedMood = null;
 let selectedEmotions = new Set();
 let selectedActivities = new Set();
 let _logCache = null;
 let chartDots = [];
 let chartPeriod = 'week';
+let layerState = {raw:true, avg:true, wave:true};
 
 // ── Helpers ────────────────────────────────────────────
 function escHtml(s) {
@@ -656,12 +685,153 @@ function deleteEntry(eid) {
   updateStreak();
 }
 
+// ── Menscykelspårning ───────────────────────────────────
+function getCycleData() {
+  try {
+    const d = JSON.parse(localStorage.getItem('hl_cycle'));
+    if (d) return d;
+  } catch {}
+  return {enabled:false, cycleLengthDefault:28, periodLengthDefault:5, periods:[]};
+}
+function saveCycleData(d) { localStorage.setItem('hl_cycle', JSON.stringify(d)); }
+
+function computeCycleLength(cyc) {
+  const periods = [...cyc.periods].sort((a,b) => a.start.localeCompare(b.start));
+  if (periods.length < 2) return cyc.cycleLengthDefault || 28;
+  const gaps = [];
+  for (let i=1; i<periods.length; i++) {
+    const gap = (new Date(periods[i].start) - new Date(periods[i-1].start)) / 86400000;
+    if (gap > 0 && gap < 90) gaps.push(gap);
+  }
+  const recent = gaps.slice(-6);
+  if (!recent.length) return cyc.cycleLengthDefault || 28;
+  return recent.reduce((a,b) => a+b, 0) / recent.length;
+}
+
+function computePeriodLength(cyc) {
+  const lens = cyc.periods.map(p => p.length).filter(l => l && l>0);
+  if (!lens.length) return cyc.periodLengthDefault || 5;
+  const recent = lens.slice(-6);
+  return recent.reduce((a,b) => a+b, 0) / recent.length;
+}
+
+function phaseForDate(dateStr) {
+  const cyc = getCycleData();
+  if (!cyc.enabled || !cyc.periods.length) return null;
+  const periods = [...cyc.periods].sort((a,b) => a.start.localeCompare(b.start));
+  const d = new Date(dateStr);
+  let ref = null;
+  for (const p of periods) { if (new Date(p.start) <= d) ref = p; else break; }
+  if (!ref) return null;
+  const cycleLen  = Math.round(computeCycleLength(cyc));
+  const periodLen = Math.round(computePeriodLength(cyc));
+  const daysSince = Math.floor((d - new Date(ref.start)) / 86400000);
+  const dayInCycle = (daysSince % cycleLen) + 1;
+  const ovulationDay = Math.max(cycleLen - 14, periodLen + 2);
+  let phase;
+  if (dayInCycle <= periodLen) phase = 'mens';
+  else if (dayInCycle < ovulationDay) phase = 'follikel';
+  else if (dayInCycle <= ovulationDay+1) phase = 'agglossning';
+  else phase = 'luteal';
+  return {phase, dayInCycle, cycleLen};
+}
+
+function computeNextPeriod(cyc) {
+  if (!cyc.periods.length) return null;
+  const periods = [...cyc.periods].sort((a,b) => a.start.localeCompare(b.start));
+  const last = periods[periods.length-1];
+  const cycleLen = Math.round(computeCycleLength(cyc));
+  const d = new Date(last.start);
+  d.setDate(d.getDate() + cycleLen);
+  return dateKey(d);
+}
+
+function toggleCycleTracking() {
+  const cyc = getCycleData();
+  cyc.enabled = !cyc.enabled;
+  saveCycleData(cyc);
+  updateCycleUI();
+}
+
+function updateCycleUI() {
+  const cyc = getCycleData();
+  const actionBtn = document.getElementById('cycle-action-btn');
+  if (actionBtn) actionBtn.style.display = cyc.enabled ? 'block' : 'none';
+  const toggleBtn = document.getElementById('cycle-toggle-btn');
+  if (toggleBtn) toggleBtn.textContent = cyc.enabled ? '🌙 Cykelspårning: På' : '🌙 Cykelspårning: Av';
+}
+
+function logPeriodStart() {
+  const start = document.getElementById('cycle-start-date').value;
+  if (!start) { alert('Välj ett datum.'); return; }
+  const lenRaw  = document.getElementById('cycle-length-input').value;
+  const length  = lenRaw ? parseInt(lenRaw) : null;
+  const cyc = getCycleData();
+  cyc.periods = cyc.periods.filter(p => p.start !== start);
+  cyc.periods.push({start, length});
+  cyc.periods.sort((a,b) => a.start.localeCompare(b.start));
+  saveCycleData(cyc);
+  document.getElementById('cycle-length-input').value = '';
+  renderCyclePanel();
+}
+
+function deletePeriod(start) {
+  if (!confirm('Ta bort denna mensstart?')) return;
+  const cyc = getCycleData();
+  cyc.periods = cyc.periods.filter(p => p.start !== start);
+  saveCycleData(cyc);
+  renderCyclePanel();
+}
+
+function renderCyclePanel() {
+  const cyc = getCycleData();
+  const statusEl = document.getElementById('cycle-status');
+  const today = todayKey();
+  const cur = phaseForDate(today);
+  const next = computeNextPeriod(cyc);
+  if (cur) {
+    const nextText = next ? new Date(next).toLocaleDateString('sv-SE',{day:'numeric',month:'long'}) : null;
+    statusEl.innerHTML = `<div class="insight-block"><h3>${PHASE_ICONS[cur.phase]} ${PHASE_LABELS[cur.phase]}</h3>
+      <div class="insight-text">Dag ${cur.dayInCycle} av ${cur.cycleLen} i cykeln.</div>
+      ${nextText ? `<div class="insight-text" style="margin-top:0.4rem">Nästa förväntade mens: ${nextText}</div>` : ''}
+    </div>`;
+  } else {
+    statusEl.innerHTML = '<div class="insight-empty">Logga din första mensstart nedan för att se fas och prognos.</div>';
+  }
+  document.getElementById('cycle-start-date').value = today;
+  renderCycleHistory();
+}
+
+function renderCycleHistory() {
+  const cyc = getCycleData();
+  const el  = document.getElementById('cycle-history');
+  if (!cyc.periods.length) { el.innerHTML = '<div class="diary-empty">Ingen historik ännu.</div>'; return; }
+  const sorted = [...cyc.periods].sort((a,b) => b.start.localeCompare(a.start));
+  el.innerHTML = sorted.map(p => {
+    const dn = new Date(p.start).toLocaleDateString('sv-SE', {day:'numeric', month:'long', year:'numeric'});
+    return `<div class="diary-entry">
+      <div class="diary-right">
+        <div class="diary-note-text">${dn}${p.length ? ' · '+p.length+' dagar' : ''}</div>
+        <div class="diary-actions">
+          <button class="diary-action-btn" style="color:#8B3A2F" onclick="deletePeriod('${p.start}')">🗑️ Ta bort</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 // ── Graf ───────────────────────────────────────────────
 function setChartPeriod(p) {
   chartPeriod = p;
   ['week','month','all'].forEach(v =>
     document.getElementById('cp-'+v).classList.toggle('active', v === p)
   );
+  renderChart();
+}
+
+function toggleLayer(name) {
+  layerState[name] = !layerState[name];
+  document.getElementById('cl-'+name).classList.toggle('active', layerState[name]);
   renderChart();
 }
 
@@ -732,6 +902,25 @@ function renderChart() {
     }
   }
 
+  // Cykelfas-bakgrund (om cykelspårning är påslagen)
+  const cyc = getCycleData();
+  if (cyc.enabled && cyc.periods.length) {
+    const oneDay = 86400000;
+    let cursor = new Date(firstDate);
+    while (cursor <= lastDate) {
+      const k = dateKey(cursor);
+      const ph = phaseForDate(k);
+      if (ph) {
+        const x0 = xForDate(k);
+        const nxt = new Date(cursor); nxt.setDate(nxt.getDate()+1);
+        const x1 = nxt <= lastDate ? xForDate(dateKey(nxt)) : x0 + cw/Math.max((lastDate-firstDate)/oneDay,1);
+        ctx.fillStyle = PHASE_COLORS[ph.phase] || 'transparent';
+        ctx.fillRect(x0, pad.top, Math.max(x1-x0,1), ch);
+      }
+      cursor.setDate(cursor.getDate()+1);
+    }
+  }
+
   // Grid
   for (let v=1; v<=5; v++) {
     const y = pad.top+ch-((v-1)/4)*ch;
@@ -747,16 +936,22 @@ function renderChart() {
     y: pad.top+ch-((d.avg-1)/4)*ch
   }));
 
-  // LAGER 1 – Rullande 7-dagarssnitt (mjuk våglinje bakom allt)
+  // LAGER 1 – Viktat 7-dagarssnitt (mjuk våglinje bakom allt, närmsta dagarna väger tyngre)
   const WINDOW=7;
+  const half=Math.floor(WINDOW/2);
   const rollingPts = dayAvgs.map((d,i) => {
-    const half=Math.floor(WINDOW/2);
     const slice=dayAvgs.slice(Math.max(0,i-half), Math.min(dayAvgs.length,i+half+1));
-    const avg=slice.reduce((s,v)=>s+v.avg,0)/slice.length;
+    let wsum=0, wtot=0;
+    slice.forEach(v => {
+      const dist = Math.abs(dayAvgs.indexOf(v) - i);
+      const weight = (half+1) - dist; // triangelvikt: mitten väger tyngst
+      wsum += v.avg*weight; wtot += weight;
+    });
+    const avg = wsum/wtot;
     return { x: xForDate(d.key), y: pad.top+ch-((avg-1)/4)*ch };
   });
 
-  if (rollingPts.length > 1) {
+  if (layerState.wave && rollingPts.length > 1) {
     // Gradient under vågen
     const wg = ctx.createLinearGradient(0,pad.top,0,pad.top+ch);
     wg.addColorStop(0,'rgba(122,154,181,0.22)');
@@ -773,15 +968,18 @@ function renderChart() {
   }
 
   // LAGER 2 – Råpunkter (diskreta prickar, ingen linje)
+  chartDots = [];
   entries.forEach(e => {
     const x=xForDate(e.key), y=pad.top+ch-((e.mood-1)/4)*ch;
-    ctx.beginPath(); ctx.arc(x,y,2.2,0,Math.PI*2);
-    ctx.fillStyle='rgba(26,47,74,0.28)'; ctx.fill();
+    if (layerState.raw) {
+      ctx.beginPath(); ctx.arc(x,y,2.2,0,Math.PI*2);
+      ctx.fillStyle='rgba(26,47,74,0.28)'; ctx.fill();
+    }
     chartDots.push({x, y, entry:e});
   });
 
   // LAGER 3 – Dagssnittlinje (skarp Catmull-Rom med prickar)
-  if (avgPts.length > 1) {
+  if (layerState.avg && avgPts.length > 1) {
     drawSpline(avgPts, 0.4);
     ctx.strokeStyle='#1A2F4A'; ctx.lineWidth=2;
     ctx.lineJoin='round'; ctx.lineCap='round'; ctx.stroke();
@@ -904,6 +1102,91 @@ function renderInsights() {
   const topGood = topW(gW), topBad = topW(bW);
   const fmtWk   = wk => new Date(wk).toLocaleDateString('sv-SE', {day:'numeric', month:'short'});
 
+  // Riktning just nu (viktat snitt, jämför nu vs ~2 veckor sedan)
+  const dayMapAll = {};
+  entries.forEach(e => { if (!dayMapAll[e.key]) dayMapAll[e.key]=[]; dayMapAll[e.key].push(e.mood); });
+  const dayKeysAll = Object.keys(dayMapAll).sort();
+  const dayAvgsAll = dayKeysAll.map(k => ({key:k, avg: dayMapAll[k].reduce((s,v)=>s+v,0)/dayMapAll[k].length}));
+  function weightedAt(idx, arr, window) {
+    window = window||7;
+    const half = Math.floor(window/2);
+    const slice = arr.slice(Math.max(0,idx-half), Math.min(arr.length, idx+half+1));
+    let wsum=0, wtot=0;
+    slice.forEach((v,si) => {
+      const realIdx = Math.max(0,idx-half)+si;
+      const dist = Math.abs(realIdx-idx);
+      const w = (half+1)-dist;
+      wsum += v.avg*w; wtot += w;
+    });
+    return wsum/wtot;
+  }
+  let direction = null;
+  if (dayAvgsAll.length >= 6) {
+    const lastIdx = dayAvgsAll.length-1;
+    const priorIdx = Math.max(0, lastIdx-13);
+    const diff = weightedAt(lastIdx, dayAvgsAll) - weightedAt(priorIdx, dayAvgsAll);
+    direction = diff;
+  }
+
+  // Aktivitet → humör dagen efter
+  const activityEffect = {};
+  Object.keys(ACTIVITY_MAP).forEach(act => {
+    const tagDates = new Set();
+    Object.keys(log).forEach(k => {
+      const arr = Array.isArray(log[k]) ? log[k] : [log[k]];
+      if (arr.some(e => (e.activities||[]).includes(act))) tagDates.add(k);
+    });
+    const nextMoods = [];
+    tagDates.forEach(k => {
+      const d = new Date(k); d.setDate(d.getDate()+1);
+      const narr = getEntriesForKey(dateKey(d));
+      if (narr.length) nextMoods.push(narr.reduce((s,e)=>s+e.mood,0)/narr.length);
+    });
+    if (nextMoods.length >= 2) activityEffect[act] = mn(nextMoods);
+  });
+
+  // Känslotaggar som hänger ihop (samma dag)
+  const pairCounts = {};
+  Object.keys(log).forEach(k => {
+    const arr = Array.isArray(log[k]) ? log[k] : [log[k]];
+    const daySet = new Set();
+    arr.forEach(e => (e.emotions||[]).forEach(em => daySet.add(em)));
+    const dayEmotions = [...daySet];
+    for (let i=0; i<dayEmotions.length; i++) {
+      for (let j=i+1; j<dayEmotions.length; j++) {
+        const pair = [dayEmotions[i],dayEmotions[j]].sort().join('+');
+        pairCounts[pair] = (pairCounts[pair]||0)+1;
+      }
+    }
+  });
+  const topPairs = Object.entries(pairCounts).filter(([,c]) => c>=2).sort((a,b) => b[1]-a[1]).slice(0,3);
+
+  // Cykelfas-insikter (om påslaget)
+  const cycData = getCycleData();
+  let phaseBlockHTML = '';
+  if (cycData.enabled && cycData.periods.length) {
+    const phaseMoods = {mens:[], follikel:[], agglossning:[], luteal:[]};
+    const phaseTags  = {mens:{}, follikel:{}, agglossning:{}, luteal:{}};
+    entries.forEach(e => {
+      const ph = phaseForDate(e.key);
+      if (!ph || !phaseMoods[ph.phase]) return;
+      phaseMoods[ph.phase].push(e.mood);
+      [...(e.emotions||[]), ...(e.activities||[])].forEach(tag => {
+        phaseTags[ph.phase][tag] = (phaseTags[ph.phase][tag]||0)+1;
+      });
+    });
+    const phaseRows = Object.keys(PHASE_LABELS).filter(p => phaseMoods[p].length>=2)
+      .map(p => irow(PHASE_ICONS[p], PHASE_LABELS[p], 'Snitt '+mf(phaseMoods[p])+' av 5 ('+phaseMoods[p].length+' loggningar).')).join('');
+    const tagRows = Object.keys(PHASE_LABELS).filter(p => Object.keys(phaseTags[p]).length)
+      .map(p => {
+        const top = Object.entries(phaseTags[p]).sort((a,b) => b[1]-a[1]).slice(0,2)
+          .map(([t]) => EMOTION_MAP[t]||ACTIVITY_MAP[t]||t).join(' ');
+        return top ? irow(PHASE_ICONS[p], 'Vanligast i '+PHASE_LABELS[p], top) : '';
+      }).join('');
+    if (phaseRows) phaseBlockHTML += `<div class="insight-block"><h3>🌙 Humör per cykelfas</h3>${phaseRows}</div>`;
+    if (tagRows)   phaseBlockHTML += `<div class="insight-block"><h3>🌙 Taggar per fas</h3>${tagRows}</div>`;
+  }
+
   el.innerHTML =
     `<div class="insight-block"><h3>📊 Översikt</h3>
       ${irow('📈','Totalt snitt', mf(allM)+' av 5 — '+entries.length+' loggningar.')}
@@ -927,7 +1210,17 @@ function renderInsights() {
     ${topGood||topBad ? `<div class="insight-block"><h3>💬 Ord i dina anteckningar</h3>
       ${topGood ? irow('😊','Ord på bra dagar',topGood) : ''}
       ${topBad ? irow('😞','Ord på svåra dagar',topBad) : ''}
-    </div>` : ''}`;
+    </div>` : ''}
+    ${direction!==null ? `<div class="insight-block"><h3>🧭 Riktning</h3>
+      ${irow(direction>0.3?'📈':direction<-0.3?'📉':'➡️','Riktning just nu', direction>0.3?'Humöret pekar uppåt just nu (viktat snitt +'+direction.toFixed(1)+' mot för ~2 veckor sedan).' : direction<-0.3?'Humöret pekar nedåt just nu (viktat snitt '+direction.toFixed(1)+' mot för ~2 veckor sedan).' : 'Humöret ligger stabilt jämfört med för ~2 veckor sedan.')}
+    </div>` : ''}
+    ${Object.keys(activityEffect).length ? `<div class="insight-block"><h3>🍾 Aktivitet → humör dagen efter</h3>
+      ${Object.entries(activityEffect).map(([act,avg]) => irow(ACTIVITY_MAP[act]||'', act.charAt(0).toUpperCase()+act.slice(1)+' → dagen efter', 'Snitt '+avg.toFixed(1)+' av 5 dagen efter'+(m?' (totalsnitt '+m.toFixed(1)+')':'')+'.')).join('')}
+    </div>` : ''}
+    ${topPairs.length ? `<div class="insight-block"><h3>🔗 Känslor som hänger ihop</h3>
+      ${topPairs.map(([pair,c]) => { const [a,b] = pair.split('+'); return irow((EMOTION_MAP[a]||'')+(EMOTION_MAP[b]||''), a+' + '+b, c+' dagar tillsammans.'); }).join('')}
+    </div>` : ''}
+    ${phaseBlockHTML}`;
 }
 
 // ── Berättelse ─────────────────────────────────────────
@@ -1139,7 +1432,15 @@ function saveSettings() {
 
 // ── Versionshistorik ───────────────────────────────────
 const HISTORY = [
-  {version:'v0.6', current:true, items:[
+  {version:'v0.7', current:true, items:[
+    'Berättelse-panelen borttagen från gränssnittet (koden ligger kvar dold)',
+    'Graf: av/på-knappar för råpunkter, dagssnittlinje och mjuk våg – valfri kombination',
+    'Mjuk våg är nu ett viktat 7-dagarssnitt – reagerar snabbare på dippar och toppar',
+    'Ny aktivitetstagg: träning 🏋️',
+    'Menscykelspårning (valfri, av/på i Inställningar): logga mensstart, automatisk cykellängd över tid, fyra faser (mens/follikel/ägglossning/luteal), fasfärgning i grafen, prognos för nästa mens',
+    'Nya insikter: Aktivitet → humör dagen efter, Känslor som hänger ihop, Riktning just nu, Humör per cykelfas, Taggar per fas'
+  ]},
+  {version:'v0.6', items:[
     'Känslotaggar: ledsen 😢 arg 😠 orolig 😟 trött 😴 ångest 😰 – valfritt tillägg vid loggning',
     'Aktivitetstaggar: alkohol 🍾 och tablett 💊 – separat rad vid loggning',
     'Taggar visas i dagens logg och dagboken',
@@ -1193,6 +1494,7 @@ function loadApp() {
   renderTodayLog();
   updateStreak();
   renderHistory();
+  updateCycleUI();
 }
 
 function dismissIOSPrompt() { document.getElementById('ios-prompt').classList.remove('show'); }

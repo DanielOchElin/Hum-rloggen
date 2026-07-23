@@ -1,13 +1,25 @@
 Humörloggen – Versionshistorik
 ==============================
 
-v0.6 (aktuell)
+v0.7 (aktuell)
 --------------
-• Känslotaggar: ledsen, arg, orolig, trött, ångest – valfritt tillägg vid loggning
-• Känslotaggar visas i logglistan och dagboken
-• Tidsval på grafen: Vecka, Månad, Allt
-• Mjuk snittlinje (dagssnitt) i bakgrunden på grafen
-• Råpunkter (alla loggningar) visas som diskreta prickar bakom snittlinjen
+• Berättelse-panelen borttagen från gränssnittet (koden ligger kvar dold)
+• Graf: av/på-knappar för råpunkter, dagssnittlinje och mjuk våg – valfri kombination
+• Mjuk våg är nu ett viktat 7-dagarssnitt – reagerar snabbare på dippar och toppar
+• Ny aktivitetstagg: träning 🏋️
+• Menscykelspårning (valfri, av/på i Inställningar): logga mensstart, automatisk cykellängd
+  över tid, fyra faser (mens/follikel/ägglossning/luteal), fasfärgning i grafen, prognos
+  för nästa mens
+• Nya insikter: Aktivitet → humör dagen efter, Känslor som hänger ihop, Riktning just nu,
+  Humör per cykelfas, Taggar per fas
+
+v0.6
+--------------
+• Känslotaggar: ledsen 😢 arg 😠 orolig 😟 trött 😴 ångest 😰 – valfritt tillägg vid loggning
+• Aktivitetstaggar: alkohol 🍾 och tablett 💊 – separat rad vid loggning
+• Taggar visas i dagens logg och dagboken
+• Tidsval på grafen: Vecka / Månad / Allt
+• Tre grafslager: diskreta råpunkter, dagssnittlinje (Catmull-Rom) och mjuk 7-dagarsvåg i bakgrunden
 
 v0.5
 --------------
